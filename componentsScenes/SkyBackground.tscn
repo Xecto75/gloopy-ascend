@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://b6i4jsfq13d08"]
+
+[ext_resource type="Script" uid="uid://dcv2bajmpfgks" path="res://componentsScripts/sky_background.gd" id="1_yoams"]
+
+[node name="SkyBackground" type="CanvasLayer"]
+script = ExtResource("1_yoams")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+z_index = -100
+custom_minimum_size = Vector2(2184, 3612)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+metadata/_edit_use_anchors_ = true

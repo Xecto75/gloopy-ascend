@@ -1,0 +1,36 @@
+[gd_scene load_steps=6 format=3 uid="uid://dj2p7dho6lech"]
+
+[ext_resource type="Texture2D" uid="uid://ddaja2k071apa" path="res://assets/images/img_background.jpg" id="1_18rkt"]
+[ext_resource type="Texture2D" uid="uid://cdjbg2050v5nr" path="res://assets/icons/img_settings.png" id="2_18rkt"]
+[ext_resource type="Script" uid="uid://d2k233ctwv13c" path="res://mainScripts/WorldGenerator.gd" id="3_gmlja"]
+[ext_resource type="PackedScene" uid="uid://xcn2y4ak0ck2" path="res://componentsScenes/Planet.tscn" id="4_4iqkd"]
+[ext_resource type="PackedScene" uid="uid://0tqq6o2e1rnc" path="res://componentsScenes/Player.tscn" id="5_4iqkd"]
+
+[node name="Main" type="Node2D"]
+
+[node name="CanvasLayer" type="Node2D" parent="."]
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer"]
+offset_right = 1080.0
+offset_bottom = 1920.0
+texture = ExtResource("1_18rkt")
+
+[node name="Button" type="Button" parent="CanvasLayer"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = 944.0
+offset_top = 3.0
+offset_right = 1080.0
+offset_bottom = 139.0
+grow_horizontal = 0
+pivot_offset = Vector2(32, 0)
+icon = ExtResource("2_18rkt")
+
+[node name="WorldGenerator" type="Node2D" parent="." node_paths=PackedStringArray("player")]
+script = ExtResource("3_gmlja")
+planet_scene = ExtResource("4_4iqkd")
+player = NodePath("../Player")
+
+[node name="Player" parent="." instance=ExtResource("5_4iqkd")]
+z_index = 4096

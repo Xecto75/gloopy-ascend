@@ -1,0 +1,214 @@
+[gd_scene load_steps=28 format=3 uid="uid://dj2p7dho6lech"]
+
+[ext_resource type="Script" uid="uid://cgt1lwil75d14" path="res://mainScripts/CloudsGen.gd" id="1_bggie"]
+[ext_resource type="Script" uid="uid://dylf35miitnse" path="res://mainScripts/main.gd" id="1_ei0ll"]
+[ext_resource type="AudioStream" uid="uid://ce5lee1g2umtn" path="res://assets/bgm/Sky_Blue_POP.mp3" id="2_1qxlk"]
+[ext_resource type="Texture2D" uid="uid://bxheuqw4af5xr" path="res://assets/images/img_background.png" id="3_1qxlk"]
+[ext_resource type="Texture2D" uid="uid://tkvyuhmopap6" path="res://assets/images/img_gloopy_title.png" id="3_7kjiq"]
+[ext_resource type="Script" uid="uid://d2k233ctwv13c" path="res://mainScripts/WorldGenerator.gd" id="3_gmlja"]
+[ext_resource type="Shader" uid="uid://cftyovacr7lor" path="res://assets/styles/blur.gdshader" id="3_tfys2"]
+[ext_resource type="PackedScene" uid="uid://ccp40dc3dmiqf" path="res://uiScenes/GameOverOverlay.tscn" id="3_x5oen"]
+[ext_resource type="PackedScene" uid="uid://xcn2y4ak0ck2" path="res://componentsScenes/Planet.tscn" id="4_4iqkd"]
+[ext_resource type="PackedScene" uid="uid://di7iiwvstv2r5" path="res://uiScenes/HomeOverlay.tscn" id="4_5ftk5"]
+[ext_resource type="PackedScene" uid="uid://0tqq6o2e1rnc" path="res://componentsScenes/Player.tscn" id="5_4iqkd"]
+[ext_resource type="PackedScene" uid="uid://b6lntv0lqus47" path="res://uiScenes/PausePopUp.tscn" id="5_gnaye"]
+[ext_resource type="PackedScene" uid="uid://b6i4jsfq13d08" path="res://componentsScenes/SkyBackground.tscn" id="6_ei0ll"]
+[ext_resource type="PackedScene" uid="uid://dy35jb333yykg" path="res://uiScenes/SettingPopUp.tscn" id="6_og8m4"]
+[ext_resource type="Texture2D" uid="uid://d33qmboljfbeg" path="res://assets/icons/icon_pause.png" id="7_x5oen"]
+[ext_resource type="FontFile" uid="uid://ii4ynd7hrmxh" path="res://assets/fonts/Chewy-Regular.ttf" id="8_5ftk5"]
+[ext_resource type="FontFile" uid="uid://bdkolrntsny1i" path="res://assets/fonts/Baloo2-Bold.ttf" id="8_8dxbe"]
+[ext_resource type="Texture2D" uid="uid://cml0up3cdtuu3" path="res://assets/images/Clound_1.png" id="13_cggtk"]
+[ext_resource type="Texture2D" uid="uid://dydqi1jnubk2t" path="res://assets/images/Clound_2.png" id="14_p11mo"]
+[ext_resource type="Texture2D" uid="uid://dejb52esh17l8" path="res://assets/images/Clound_3.png" id="15_dm346"]
+[ext_resource type="Script" uid="uid://db8hhpl5hti1f" path="res://mainScripts/ground.gd" id="16_dm346"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_x5oen"]
+size = Vector2(231, 37)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p11mo"]
+size = Vector2(29999, 219.5)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1qxlk"]
+shader = ExtResource("3_tfys2")
+shader_parameter/blur_radius = 1.5
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ei0ll"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6e7h5"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hawsd"]
+
+[node name="Main" type="Node2D" node_paths=PackedStringArray("camera")]
+script = ExtResource("1_ei0ll")
+camera = NodePath("World/Player/Sprite2D/Camera2D")
+
+[node name="BGM" type="AudioStreamPlayer" parent="."]
+process_mode = 1
+stream = ExtResource("2_1qxlk")
+volume_db = -15.0
+bus = &"BGM"
+parameters/looping = false
+
+[node name="World" type="Node2D" parent="."]
+
+[node name="HomeSlime" type="Sprite2D" parent="World"]
+position = Vector2(592, 886)
+texture = ExtResource("3_7kjiq")
+
+[node name="BackgroundTexture" type="TextureRect" parent="World"]
+offset_left = -530.0
+offset_top = -896.0
+offset_right = 1654.0
+offset_bottom = 2716.0
+mouse_filter = 2
+texture = ExtResource("3_1qxlk")
+
+[node name="SkyBackground" parent="World" node_paths=PackedStringArray("camera", "player", "stars") instance=ExtResource("6_ei0ll")]
+layer = -10
+camera = NodePath("../Player/Sprite2D/Camera2D")
+player = NodePath("../Player")
+stars = NodePath("../StarsLayer/Stars")
+
+[node name="ColorRect" parent="World/SkyBackground" index="0"]
+z_index = -99
+offset_left = -531.0
+offset_top = -896.0
+offset_right = 573.0
+offset_bottom = 796.0
+
+[node name="Rock" type="StaticBody2D" parent="World"]
+collision_layer = 4
+
+[node name="RockCol" type="CollisionShape2D" parent="World/Rock"]
+position = Vector2(598, 1460)
+shape = SubResource("RectangleShape2D_x5oen")
+
+[node name="StarsLayer" type="CanvasLayer" parent="World"]
+layer = -9
+
+[node name="Stars" type="Node2D" parent="World/StarsLayer"]
+
+[node name="GroundColor" type="ColorRect" parent="World"]
+z_index = -1
+custom_minimum_size = Vector2(30000, 3000)
+offset_left = -14000.0
+offset_top = 1419.0
+offset_right = 16000.0
+offset_bottom = 4419.0
+color = Color(0.321569, 0.717647, 0.435294, 1)
+
+[node name="Ground" type="Area2D" parent="World" groups=["kill_zone"]]
+visible = false
+collision_layer = 4
+script = ExtResource("16_dm346")
+
+[node name="GroundCol" type="CollisionShape2D" parent="World/Ground"]
+position = Vector2(1000.5, 1739.25)
+shape = SubResource("RectangleShape2D_p11mo")
+
+[node name="WorldGenerator" type="Node2D" parent="World" node_paths=PackedStringArray("player")]
+script = ExtResource("3_gmlja")
+planet_scene = ExtResource("4_4iqkd")
+player = NodePath("../Player")
+
+[node name="CloudsGen" type="Node2D" parent="World" node_paths=PackedStringArray("player")]
+script = ExtResource("1_bggie")
+player = NodePath("../Player")
+cloud_textures = Array[Texture2D]([ExtResource("13_cggtk"), ExtResource("14_p11mo"), ExtResource("15_dm346")])
+
+[node name="Player" parent="World" instance=ExtResource("5_4iqkd")]
+z_index = 10
+position = Vector2(590, 1380)
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="DarkOverlay" type="ColorRect" parent="UI"]
+process_mode = 3
+visible = false
+material = SubResource("ShaderMaterial_1qxlk")
+custom_minimum_size = Vector2(1456, 2408)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -188.0
+offset_top = -244.0
+offset_right = 188.0
+offset_bottom = 244.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="SettingPopUp" parent="UI" instance=ExtResource("6_og8m4")]
+process_mode = 3
+visible = false
+
+[node name="HomeOverlay" parent="UI" instance=ExtResource("4_5ftk5")]
+visible = false
+
+[node name="GameOverOverlay" parent="UI" instance=ExtResource("3_x5oen")]
+visible = false
+
+[node name="PausePopUp" parent="UI" instance=ExtResource("5_gnaye")]
+visible = false
+
+[node name="PauseButton" type="Button" parent="UI"]
+process_mode = 3
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -156.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 156.0
+grow_horizontal = 0
+pivot_offset = Vector2(136, 0)
+theme_override_styles/hover = SubResource("StyleBoxEmpty_ei0ll")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_6e7h5")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_hawsd")
+icon = ExtResource("7_x5oen")
+
+[node name="ScoreLabel" type="Label" parent="UI"]
+z_index = -1
+custom_minimum_size = Vector2(600, 140)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -810.0
+offset_right = 300.0
+offset_bottom = -670.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(300, 70)
+theme_override_fonts/font = ExtResource("8_5ftk5")
+theme_override_font_sizes/font_size = 100
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BonusLabel" type="Label" parent="UI"]
+visible = false
+z_index = -1
+custom_minimum_size = Vector2(520, 280)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -260.0
+offset_top = -660.0
+offset_right = 260.0
+offset_bottom = -380.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(260, 140)
+theme_override_fonts/font = ExtResource("8_8dxbe")
+theme_override_font_sizes/font_size = 80
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="button_up" from="UI/PauseButton" to="." method="_on_pause_button_button_up"]
+
+[editable path="World/SkyBackground"]
+[editable path="World/Player"]

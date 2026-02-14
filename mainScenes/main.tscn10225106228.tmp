@@ -1,0 +1,113 @@
+[gd_scene load_steps=20 format=3 uid="uid://dj2p7dho6lech"]
+
+[ext_resource type="Script" uid="uid://dylf35miitnse" path="res://mainScripts/main.gd" id="1_ei0ll"]
+[ext_resource type="Texture2D" uid="uid://criegrfbuyru7" path="res://assets/images/img_background.png" id="1_q7dh4"]
+[ext_resource type="Script" uid="uid://d2k233ctwv13c" path="res://mainScripts/WorldGenerator.gd" id="3_gmlja"]
+[ext_resource type="PackedScene" uid="uid://ccp40dc3dmiqf" path="res://uiScenes/GameOverOverlay.tscn" id="3_x5oen"]
+[ext_resource type="PackedScene" uid="uid://xcn2y4ak0ck2" path="res://componentsScenes/Planet.tscn" id="4_4iqkd"]
+[ext_resource type="PackedScene" uid="uid://di7iiwvstv2r5" path="res://uiScenes/HomeOverlay.tscn" id="4_5ftk5"]
+[ext_resource type="PackedScene" uid="uid://0tqq6o2e1rnc" path="res://componentsScenes/Player.tscn" id="5_4iqkd"]
+[ext_resource type="PackedScene" uid="uid://b6lntv0lqus47" path="res://uiScenes/PausePopUp.tscn" id="5_gnaye"]
+[ext_resource type="PackedScene" uid="uid://b6i4jsfq13d08" path="res://componentsScenes/SkyBackground.tscn" id="6_ei0ll"]
+[ext_resource type="PackedScene" uid="uid://dy35jb333yykg" path="res://uiScenes/SettingPopUp.tscn" id="6_og8m4"]
+[ext_resource type="Texture2D" uid="uid://d33qmboljfbeg" path="res://assets/icons/icon_pause.png" id="7_x5oen"]
+[ext_resource type="FontFile" uid="uid://ii4ynd7hrmxh" path="res://assets/fonts/Chewy-Regular.ttf" id="8_5ftk5"]
+[ext_resource type="Texture2D" uid="uid://cml0up3cdtuu3" path="res://assets/images/Clound_1.png" id="13_cggtk"]
+[ext_resource type="Texture2D" uid="uid://dydqi1jnubk2t" path="res://assets/images/Clound_2.png" id="14_p11mo"]
+[ext_resource type="Texture2D" uid="uid://dejb52esh17l8" path="res://assets/images/Clound_3.png" id="15_dm346"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ei0ll"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6e7h5"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hawsd"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_x5oen"]
+size = Vector2(289, 132)
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_ei0ll")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+offset_right = 1080.0
+offset_bottom = 1920.0
+texture = ExtResource("1_q7dh4")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="GameOverOverlay" parent="CanvasLayer" instance=ExtResource("3_x5oen")]
+visible = false
+
+[node name="HomeOverlay" parent="CanvasLayer" instance=ExtResource("4_5ftk5")]
+visible = false
+
+[node name="PausePopUp" parent="CanvasLayer" instance=ExtResource("5_gnaye")]
+visible = false
+
+[node name="SettingPopUp" parent="CanvasLayer" instance=ExtResource("6_og8m4")]
+visible = false
+
+[node name="PauseButton" type="Button" parent="CanvasLayer"]
+process_mode = 3
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -156.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 156.0
+grow_horizontal = 0
+pivot_offset = Vector2(136, 0)
+theme_override_styles/hover = SubResource("StyleBoxEmpty_ei0ll")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_6e7h5")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_hawsd")
+icon = ExtResource("7_x5oen")
+
+[node name="ScoreLabel" type="Label" parent="CanvasLayer"]
+custom_minimum_size = Vector2(300, 0)
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -150.0
+offset_top = 400.0
+offset_right = 150.0
+offset_bottom = 483.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("8_5ftk5")
+theme_override_font_sizes/font_size = 100
+horizontal_alignment = 1
+
+[node name="WorldGenerator" type="Node2D" parent="." node_paths=PackedStringArray("player")]
+script = ExtResource("3_gmlja")
+planet_scene = ExtResource("4_4iqkd")
+player = NodePath("../Player")
+
+[node name="Player" parent="." instance=ExtResource("5_4iqkd")]
+z_index = 10
+position = Vector2(540, 1600)
+
+[node name="Border" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Border"]
+position = Vector2(601.5, 1749)
+shape = SubResource("RectangleShape2D_x5oen")
+
+[node name="SkyBackground" parent="." node_paths=PackedStringArray("camera", "player", "stars", "clouds") instance=ExtResource("6_ei0ll")]
+layer = -10
+camera = NodePath("../Player/Sprite2D/Camera2D")
+player = NodePath("../Player")
+stars = NodePath("../StarsLayer/Stars")
+clouds = NodePath("../StarsLayer/Clounds")
+cloud_textures = Array[Texture2D]([ExtResource("13_cggtk"), ExtResource("14_p11mo"), ExtResource("15_dm346")])
+
+[node name="StarsLayer" type="CanvasLayer" parent="."]
+layer = -9
+
+[node name="Stars" type="Node2D" parent="StarsLayer"]
+
+[node name="Clounds" type="Node2D" parent="StarsLayer"]
+
+[connection signal="pressed" from="CanvasLayer/PauseButton" to="." method="_on_pause_button_pressed"]
+
+[editable path="Player"]
+[editable path="SkyBackground"]

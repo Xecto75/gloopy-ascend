@@ -1,0 +1,97 @@
+[gd_scene load_steps=7 format=3 uid="uid://dy35jb333yykg"]
+
+[ext_resource type="PackedScene" uid="uid://dctxm5h4133lf" path="res://uiScenes/PopUpTemplate.tscn" id="1_26cgp"]
+[ext_resource type="Script" uid="uid://cgvk4gk64qt16" path="res://uiScripts/setting_pop_up.gd" id="1_m2ekh"]
+[ext_resource type="Theme" uid="uid://c4qhmmo72xepi" path="res://assets/styles/mainTheme.tres" id="3_im4a5"]
+[ext_resource type="Texture2D" uid="uid://bk57rkqepw88w" path="res://assets/icons/icon_sound.png" id="4_22c7n"]
+[ext_resource type="Texture2D" uid="uid://cni8o6o8ao5ga" path="res://assets/icons/icon_music.png" id="5_qgrwy"]
+[ext_resource type="Texture2D" uid="uid://byh7n5vp4evrh" path="res://assets/icons/icon_vibration.png" id="6_kab8g"]
+
+[node name="SettingPopUp" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+pivot_offset = Vector2(540, 850)
+script = ExtResource("1_m2ekh")
+
+[node name="BlockerOverlay" type="ColorRect" parent="."]
+z_index = -1
+layout_mode = 0
+offset_left = -510.0
+offset_top = -404.0
+offset_right = 1573.0
+offset_bottom = 2232.0
+color = Color(1, 1, 1, 0)
+
+[node name="PopUpTemplate" parent="." instance=ExtResource("1_26cgp")]
+z_index = 10
+position = Vector2(540, 700)
+
+[node name="OutsidePanel" parent="PopUpTemplate" index="0"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -350.0
+offset_top = -270.0
+offset_right = 350.0
+offset_bottom = 270.0
+
+[node name="PopUp Title" parent="PopUpTemplate/OutsidePanel" index="0"]
+anchor_left = 0.467857
+anchor_right = 0.533571
+anchor_bottom = 0.0481481
+theme_override_colors/font_shadow_color = Color(0.137255, 0.298039, 0.0980392, 1)
+text = "Settings"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PopUpTemplate/OutsidePanel/InsidePanel/PopUpContent" index="0"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 35
+alignment = 1
+
+[node name="SoundButton" type="Button" parent="PopUpTemplate/OutsidePanel/InsidePanel/PopUpContent/HBoxContainer"]
+custom_minimum_size = Vector2(130, 130)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("3_im4a5")
+theme_override_constants/icon_max_width = 100
+toggle_mode = true
+icon = ExtResource("4_22c7n")
+icon_alignment = 1
+vertical_icon_alignment = 0
+
+[node name="MusicButton" type="Button" parent="PopUpTemplate/OutsidePanel/InsidePanel/PopUpContent/HBoxContainer"]
+custom_minimum_size = Vector2(130, 130)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("3_im4a5")
+theme_override_constants/icon_max_width = 100
+toggle_mode = true
+icon = ExtResource("5_qgrwy")
+icon_alignment = 1
+vertical_icon_alignment = 0
+
+[node name="VibrationButton" type="Button" parent="PopUpTemplate/OutsidePanel/InsidePanel/PopUpContent/HBoxContainer"]
+custom_minimum_size = Vector2(130, 130)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("3_im4a5")
+theme_override_constants/icon_max_width = 100
+toggle_mode = true
+icon = ExtResource("6_kab8g")
+icon_alignment = 1
+vertical_icon_alignment = 0
+
+[connection signal="toggled" from="PopUpTemplate/OutsidePanel/InsidePanel/PopUpContent/HBoxContainer/SoundButton" to="." method="_on_sound_button_toggled"]
+[connection signal="toggled" from="PopUpTemplate/OutsidePanel/InsidePanel/PopUpContent/HBoxContainer/MusicButton" to="." method="_on_music_button_toggled"]
+[connection signal="toggled" from="PopUpTemplate/OutsidePanel/InsidePanel/PopUpContent/HBoxContainer/VibrationButton" to="." method="_on_vibration_button_toggled"]
+
+[editable path="PopUpTemplate"]

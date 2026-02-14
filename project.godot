@@ -1,0 +1,51 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="slimeJumper"
+run/main_scene="uid://dj2p7dho6lech"
+config/features=PackedStringArray("4.4", "Mobile")
+config/icon="uid://27nalqnvyb0v"
+
+[autoload]
+
+SaveData="*res://mainScripts/SaveData.gd"
+
+[display]
+
+window/size/viewport_width=1080
+window/size/viewport_height=1920
+window/size/initial_position_type=0
+window/size/window_width_override=540
+window/size/window_height_override=960
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+window/handheld/orientation=1
+
+[file_customization]
+
+folder_colors={
+"res://assets/": "pink",
+"res://componentsScenes/": "yellow",
+"res://componentsScripts/": "yellow",
+"res://mainScenes/": "green",
+"res://mainScripts/": "green",
+"res://uiScenes/": "purple",
+"res://uiScripts/": "purple"
+}
+
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
+
+[rendering]
+
+renderer/rendering_method="mobile"

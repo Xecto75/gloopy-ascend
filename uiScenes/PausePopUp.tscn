@@ -1,0 +1,64 @@
+[gd_scene load_steps=6 format=3 uid="uid://b6lntv0lqus47"]
+
+[ext_resource type="PackedScene" uid="uid://dctxm5h4133lf" path="res://uiScenes/PopUpTemplate.tscn" id="1_ipjj2"]
+[ext_resource type="Script" uid="uid://cs2h4u5hqt8tk" path="res://uiScripts/pause_pop_up.gd" id="1_svcrk"]
+[ext_resource type="Theme" uid="uid://c4qhmmo72xepi" path="res://assets/styles/mainTheme.tres" id="2_svcrk"]
+[ext_resource type="Texture2D" uid="uid://x1w5yp2jsnxk" path="res://assets/icons/icon_resume.png" id="5_eqpfo"]
+[ext_resource type="Texture2D" uid="uid://cdjbg2050v5nr" path="res://assets/icons/img_settings.png" id="6_0h3jp"]
+
+[node name="PausePopUp" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+pivot_offset = Vector2(540, 850)
+script = ExtResource("1_svcrk")
+
+[node name="PopUpTemplate" parent="." instance=ExtResource("1_ipjj2")]
+position = Vector2(540, 700)
+
+[node name="OutsidePanel" parent="PopUpTemplate" index="0"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -350.0
+offset_top = -270.0
+offset_right = 350.0
+offset_bottom = 270.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PopUpTemplate/OutsidePanel/InsidePanel/PopUpContent" index="0"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 130
+alignment = 1
+
+[node name="ResumeButton" type="Button" parent="PopUpTemplate/OutsidePanel/InsidePanel/PopUpContent/HBoxContainer"]
+custom_minimum_size = Vector2(130, 130)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("2_svcrk")
+theme_override_constants/icon_max_width = 100
+icon = ExtResource("5_eqpfo")
+icon_alignment = 1
+vertical_icon_alignment = 0
+
+[node name="SettingsButton" type="Button" parent="PopUpTemplate/OutsidePanel/InsidePanel/PopUpContent/HBoxContainer"]
+custom_minimum_size = Vector2(130, 130)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("2_svcrk")
+theme_override_constants/icon_max_width = 100
+icon = ExtResource("6_0h3jp")
+icon_alignment = 1
+vertical_icon_alignment = 0
+
+[connection signal="pressed" from="PopUpTemplate/OutsidePanel/InsidePanel/PopUpContent/HBoxContainer/ResumeButton" to="." method="_on_resume_button_pressed"]
+[connection signal="pressed" from="PopUpTemplate/OutsidePanel/InsidePanel/PopUpContent/HBoxContainer/SettingsButton" to="." method="_on_settings_button_pressed"]
+
+[editable path="PopUpTemplate"]
