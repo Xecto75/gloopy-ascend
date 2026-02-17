@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://0tqq6o2e1rnc"]
+[gd_scene load_steps=46 format=3 uid="uid://0tqq6o2e1rnc"]
 
 [ext_resource type="Script" uid="uid://dxsmq8h27n8ov" path="res://componentsScripts/player.gd" id="1_3wjlt"]
 [ext_resource type="Texture2D" uid="uid://dlko1ibiqy3rt" path="res://assets/animations/anim_charge.png" id="2_7fmpi"]
@@ -11,6 +11,7 @@
 [ext_resource type="AudioStream" uid="uid://pcyx7y5o7owx" path="res://assets/se/landing_1.mp3" id="9_eseq4"]
 [ext_resource type="AudioStream" uid="uid://bjssrrk61ynkx" path="res://assets/se/landing_2.mp3" id="10_b6yr8"]
 [ext_resource type="AudioStream" uid="uid://dr7hsaftbswaq" path="res://assets/se/landing_3.mp3" id="11_lskae"]
+[ext_resource type="AudioStream" uid="uid://c54gjcd840nfq" path="res://assets/se/fail.mp3" id="12_eseq4"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_eseq4"]
 atlas = ExtResource("2_7fmpi")
@@ -309,6 +310,12 @@ bus = &"SFX"
 
 [node name="landing3" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("11_lskae")
+bus = &"SFX"
+
+[node name="fail" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("12_eseq4")
+volume_db = 2.0
+attenuation = 1.51572
 bus = &"SFX"
 
 [connection signal="animation_finished" from="Sprite2D" to="." method="_on_sprite_2d_animation_finished"]

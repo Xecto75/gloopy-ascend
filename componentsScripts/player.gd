@@ -3,12 +3,14 @@ extends CharacterBody2D
 # =========================================================
 # NODES
 # =========================================================
+@onready var fail_sfx: AudioStreamPlayer2D = $fail
 @onready var jump_sfx: AudioStreamPlayer2D = $jumping
 @onready var land_sfx :Array[AudioStreamPlayer2D]= [
 	$landing1,
 	$landing2,
 	$landing3
 ]
+
 
 @onready var sprite: AnimatedSprite2D = $Sprite2D
 @onready var player_col: CollisionShape2D = $player_col
@@ -388,6 +390,7 @@ func _reset_fall_fail() -> void:
 # DEATH / REVIVE
 # =========================================================
 func _die() -> void:
+	fail_sfx.play()
 	air_time = 0.0
 	jump_evaluated = false
 	set_physics_process(false)
@@ -505,7 +508,7 @@ func _evaluate_jump_bonus() -> void:
 
 	var landing_y := global_position.y
 	var delta_y := jump_start_y - landing_y  # positive = upward progress
-	print("ΔY:", delta_y)
+	#print("ΔY:", delta_y)
 
 	# --- thresholds (tune later) ---
 	const BIG_MOVE_Y := 1150.0

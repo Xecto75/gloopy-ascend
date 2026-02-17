@@ -1,8 +1,8 @@
 [gd_scene load_steps=9 format=3 uid="uid://di7iiwvstv2r5"]
 
 [ext_resource type="Script" uid="uid://7vgo4lwpnrf3" path="res://uiScripts/home_overlay.gd" id="1_vkmbp"]
+[ext_resource type="Texture2D" uid="uid://blqfvas705ea0" path="res://assets/icons/icon_settings - Copie.png" id="2_a3shx"]
 [ext_resource type="FontFile" uid="uid://bdkolrntsny1i" path="res://assets/fonts/Baloo2-Bold.ttf" id="2_jlpia"]
-[ext_resource type="Texture2D" uid="uid://cdjbg2050v5nr" path="res://assets/icons/img_settings.png" id="2_jng8h"]
 [ext_resource type="PackedScene" uid="uid://dy35jb333yykg" path="res://uiScenes/SettingPopUp.tscn" id="3_51jun"]
 [ext_resource type="Texture2D" uid="uid://bj78k4qjlyvhb" path="res://assets/images/img_escape_title.png" id="5_a3shx"]
 
@@ -37,17 +37,21 @@ pivot_offset = Vector2(32, 0)
 theme_override_styles/hover = SubResource("StyleBoxEmpty_51jun")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_jlpia")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_a3shx")
-icon = ExtResource("2_jng8h")
+icon = ExtResource("2_a3shx")
 
 [node name="highscoreLabel" type="Label" parent="."]
-custom_minimum_size = Vector2(1080, 100)
+custom_minimum_size = Vector2(1080, 136)
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
+offset_right = 1080.0
+offset_bottom = 171.0
+theme_override_colors/font_shadow_color = Color(0.509804, 0.509804, 0.509804, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 7
 theme_override_fonts/font = ExtResource("2_jlpia")
 theme_override_font_sizes/font_size = 50
 text = "HighScore : "
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="PlayLabel" type="Label" parent="."]
 layout_mode = 2

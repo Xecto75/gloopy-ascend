@@ -1,8 +1,8 @@
 [gd_scene load_steps=8 format=3 uid="uid://ccp40dc3dmiqf"]
 
 [ext_resource type="Script" uid="uid://c1qvgelq16ijj" path="res://uiScripts/game_over_overlay.gd" id="1_0qxo8"]
-[ext_resource type="Texture2D" uid="uid://cdjbg2050v5nr" path="res://assets/icons/img_settings.png" id="2_asoid"]
 [ext_resource type="FontFile" uid="uid://bdkolrntsny1i" path="res://assets/fonts/Baloo2-Bold.ttf" id="2_m0e6o"]
+[ext_resource type="Texture2D" uid="uid://blqfvas705ea0" path="res://assets/icons/icon_settings - Copie.png" id="3_m0e6o"]
 [ext_resource type="PackedScene" uid="uid://dy35jb333yykg" path="res://uiScenes/SettingPopUp.tscn" id="3_wd3tk"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wd3tk"]
@@ -17,7 +17,6 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 1080.0
 offset_bottom = 1920.0
-mouse_filter = 2
 script = ExtResource("1_0qxo8")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
@@ -36,13 +35,12 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="GameOverText" type="Label" parent="VBoxContainer"]
-visible = false
 layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0.509286, 0.509286, 0.509286, 1)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 7
 theme_override_fonts/font = ExtResource("2_m0e6o")
-theme_override_font_sizes/font_size = 150
+theme_override_font_sizes/font_size = 100
 text = "GAME OVER"
 horizontal_alignment = 1
 
@@ -52,17 +50,17 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="ScoreText" type="Label" parent="VBoxContainer"]
-visible = false
 layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0.509804, 0.509804, 0.509804, 1)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 7
 theme_override_fonts/font = ExtResource("2_m0e6o")
-theme_override_font_sizes/font_size = 90
+theme_override_font_sizes/font_size = 150
 text = "45"
 horizontal_alignment = 1
 
-[node name="PlayAgainText" type="Label" parent="."]
+[node name="PlayLabel" type="Label" parent="."]
 layout_mode = 2
 offset_top = 1517.0
 offset_right = 1080.0
@@ -90,7 +88,7 @@ pivot_offset = Vector2(32, 0)
 theme_override_styles/hover = SubResource("StyleBoxEmpty_wd3tk")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_m0e6o")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_co24j")
-icon = ExtResource("2_asoid")
+icon = ExtResource("3_m0e6o")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 

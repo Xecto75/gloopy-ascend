@@ -15,7 +15,9 @@ var freeze_dark_overlay := false
 @onready var pause_popup = $UI/PausePopUp
 @onready var home_overlay = $UI/HomeOverlay
 @onready var game_over_overlay = $UI/GameOverOverlay
-@onready var dark_overlay = $UI/DarkOverlay
+@onready var gameplay_overlay = $UI/GameplayDarkOverlay
+@onready var popup_overlay = $UI/PopupDarkOverlay
+
 
 
 @onready var score_label: Label = $UI/ScoreLabel
@@ -31,7 +33,9 @@ signal score_update(score: int)
 const SPAWN_POS := Vector2(590, 1380)
 
 func _ready() -> void:
-	
+	print(SaveData.music_enabled)
+	print("ready")
+
 	bgm.volume_db = -20
 	bgm.play()
 
@@ -49,20 +53,29 @@ func _ready() -> void:
 	player.height_updated.connect(_on_player_height_updated)
 	player.score_bonus.connect(_bonus_score_updated)
 
-	pause_popup.open_settings.connect(_open_settings)
+	pause_popup.open_settings.connect(_show_settings)
+	home_overlay.open_settings.connect(_show_settings)
+	game_over_overlay.open_settings.connect(_show_settings)
+
+
 
 	# Whenever ANY UI closes, recompute pause + overlay visibility.
 	pause_popup.overlay_close.connect(_refresh_ui)
 	settings_popup.overlay_close.connect(_refresh_ui)
 	game_over_overlay.overlay_close.connect(_refresh_ui)
+	game_over_overlay.revive.connect(_on_revive_player)
+
 	home_overlay.overlay_close.connect(_refresh_ui)
 	
 	home_overlay.start_game.connect(_on_home_start_game)
 	score_update.connect(game_over_overlay._on_score_updated)
 
-	dark_overlay.visible = false
-	dark_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
-	dark_overlay.gui_input.connect(_on_overlay_gui_input)
+	popup_overlay.visible = false
+	popup_overlay.modulate.a = 0.0
+	popup_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	popup_overlay.gui_input.connect(_on_overlay_gui_input)
+	gameplay_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
 	$World/WorldGenerator.active = false
 	_show_home()
 
@@ -89,8 +102,11 @@ func _on_home_start_game() -> void:
 func _process(_delta: float) -> void:
 	if home_slime and home_overlay.visible:
 		home_slime.global_position = camera.global_position + camera.offset
+	
 
 	_update_pause_button_visibility()
+
+
 
 # --------------------------
 # SCORE
@@ -128,8 +144,16 @@ func _on_revive_player() -> void:
 func _on_pause_button_pressed() -> void:
 	call_deferred("_show_pause")
 
-func _open_settings() -> void:
-	_show_settings()
+func _show_settings() -> void:
+	pause_popup.hide_popup()
+
+	popup_overlay.visible = true
+	popup_overlay.modulate.a = 0.4
+
+	settings_popup.show_popup()
+
+	_refresh_ui()
+	_fade_in_overlay()
 
 func _show_pause() -> void:
 	_hide_all_ui()
@@ -137,18 +161,8 @@ func _show_pause() -> void:
 	_refresh_ui()
 	_fade_in_overlay()
 
-func _show_settings() -> void:
-	pause_popup.hide_popup()
-	game_over_overlay.hide_overlay()
-
-	settings_popup.show_popup()
-	_refresh_ui()
-	_fade_in_overlay()
-
-
 
 func _show_home() -> void:
-	print("score hide")
 	score_label.visible = false
 	_hide_all_ui()
 	home_overlay.show_overlay()
@@ -172,27 +186,29 @@ func _hide_all_ui() -> void:
 	home_overlay.hide_overlay()
 
 func _refresh_ui() -> void:
-	var gameplay_ui : bool = pause_popup.visible \
-		or settings_popup.visible \
-		or game_over_overlay.visible \
-		or home_overlay.visible
 
-	dark_overlay.visible = pause_popup.visible \
-		or settings_popup.visible \
-		or game_over_overlay.visible
+	# GameOver darkening
+	gameplay_overlay.visible = game_over_overlay.visible
+	gameplay_overlay.modulate.a = 0.7 if game_over_overlay.visible else 0.0
 
-	if game_over_overlay.visible:
-		target_overlay_alpha = 0.70
-	elif pause_popup.visible or settings_popup.visible:
-		target_overlay_alpha = 0.4
+
+	# Settings / Pause darkening
+	var popup_active :bool= settings_popup.visible or pause_popup.visible
+
+	popup_overlay.visible = popup_active
+	popup_overlay.mouse_filter = Control.MOUSE_FILTER_STOP if popup_active else Control.MOUSE_FILTER_IGNORE
+
+	if popup_active:
+		var tween := create_tween()
+		tween.tween_property(popup_overlay, "modulate:a", 0.4, 0.2)
 	else:
-		target_overlay_alpha = 0.0
+		popup_overlay.modulate.a = 0.0
 
-	get_tree().paused = pause_popup.visible \
-		or settings_popup.visible \
-		or game_over_overlay.visible
 
-	_update_score_visibility()
+	# Pause logic
+	get_tree().paused = popup_active
+
+
 func _update_score_visibility() -> void:
 	var should_show : bool = not home_overlay.visible \
 		and not game_over_overlay.visible
@@ -220,12 +236,13 @@ func _close_topmost_ui() -> void:
 		return
 
 	if game_over_overlay.visible:
-		game_over_overlay.hide_overlay()
+		game_over_overlay.visible = false   # DO NOT call hide_overlay()
 		_on_revive_player()
 		return
 
 
 func _on_overlay_gui_input(event: InputEvent) -> void:
+	
 	if not event is InputEventMouseButton:
 		return
 	if skip_next_overlay_click:
@@ -319,21 +336,6 @@ func _show_bonus_popup(text: String) -> void:
 		bonus_label.visible = false
 	)
 	
-	
-func _fade_in_dark_overlay() -> void:
-	dark_overlay.visible = true
-	dark_overlay.modulate.a = 0.0
-	
-
-	var tween := create_tween()
-	tween.set_trans(Tween.TRANS_SINE)
-	tween.set_ease(Tween.EASE_OUT)
-	tween.tween_property(
-		dark_overlay,
-		"modulate:a",
-		1.0,
-		0.45
-	)
 
 func _vibrate(ms: int) -> void:
 	if not OS.has_feature("mobile"):
@@ -344,14 +346,6 @@ func _vibrate(ms: int) -> void:
 
 	Input.vibrate_handheld(ms)
 	
-
 func _fade_in_overlay() -> void:
-	dark_overlay.modulate.a = 0.0
-
-	var tween := create_tween()
-	tween.tween_property(
-		dark_overlay,
-		"modulate:a",
-		target_overlay_alpha,
-		0.25
-	)
+	if gameplay_overlay.visible: create_tween().tween_property(gameplay_overlay, "modulate:a", 0.70, 0.25)
+	if popup_overlay.visible: create_tween().tween_property(popup_overlay, "modulate:a", 0.40, 0.25)

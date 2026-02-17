@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://dj2p7dho6lech"]
+[gd_scene load_steps=28 format=3 uid="uid://dj2p7dho6lech"]
 
 [ext_resource type="Script" uid="uid://cgt1lwil75d14" path="res://mainScripts/CloudsGen.gd" id="1_bggie"]
 [ext_resource type="Script" uid="uid://dylf35miitnse" path="res://mainScripts/main.gd" id="1_ei0ll"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://bxheuqw4af5xr" path="res://assets/images/img_background.png" id="3_1qxlk"]
 [ext_resource type="Texture2D" uid="uid://tkvyuhmopap6" path="res://assets/images/img_gloopy_title.png" id="3_7kjiq"]
 [ext_resource type="Script" uid="uid://d2k233ctwv13c" path="res://mainScripts/WorldGenerator.gd" id="3_gmlja"]
+[ext_resource type="Shader" uid="uid://cftyovacr7lor" path="res://assets/styles/blur.gdshader" id="3_tfys2"]
 [ext_resource type="PackedScene" uid="uid://ccp40dc3dmiqf" path="res://uiScenes/GameOverOverlay.tscn" id="3_x5oen"]
 [ext_resource type="PackedScene" uid="uid://xcn2y4ak0ck2" path="res://componentsScenes/Planet.tscn" id="4_4iqkd"]
 [ext_resource type="PackedScene" uid="uid://di7iiwvstv2r5" path="res://uiScenes/HomeOverlay.tscn" id="4_5ftk5"]
@@ -27,6 +28,10 @@ size = Vector2(231, 37)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_p11mo"]
 size = Vector2(29999, 219.5)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1qxlk"]
+shader = ExtResource("3_tfys2")
+shader_parameter/blur_radius = 1.5
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ei0ll"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6e7h5"]
@@ -40,8 +45,9 @@ camera = NodePath("World/Player/Sprite2D/Camera2D")
 [node name="BGM" type="AudioStreamPlayer" parent="."]
 process_mode = 1
 stream = ExtResource("2_1qxlk")
+volume_db = -15.0
 bus = &"BGM"
-parameters/looping = true
+parameters/looping = false
 
 [node name="World" type="Node2D" parent="."]
 
@@ -118,6 +124,7 @@ position = Vector2(590, 1380)
 
 [node name="GameplayDarkOverlay" type="ColorRect" parent="UI"]
 process_mode = 3
+material = SubResource("ShaderMaterial_1qxlk")
 custom_minimum_size = Vector2(1456, 2408)
 anchors_preset = 15
 anchor_right = 1.0
@@ -128,6 +135,7 @@ offset_right = 188.0
 offset_bottom = 244.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
 [node name="HomeOverlay" parent="UI" instance=ExtResource("4_5ftk5")]
@@ -138,6 +146,7 @@ visible = false
 
 [node name="PopupDarkOverlay" type="ColorRect" parent="UI"]
 process_mode = 3
+material = SubResource("ShaderMaterial_1qxlk")
 custom_minimum_size = Vector2(1456, 2408)
 anchors_preset = 15
 anchor_right = 1.0
