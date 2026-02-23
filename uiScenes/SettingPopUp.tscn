@@ -24,7 +24,7 @@ color = Color(1, 1, 1, 0)
 
 [node name="PopUpTemplate" parent="." instance=ExtResource("1_26cgp")]
 z_index = 10
-position = Vector2(540, 700)
+position = Vector2(540, 900)
 
 [node name="OutsidePanel" parent="PopUpTemplate" index="0"]
 anchors_preset = 8

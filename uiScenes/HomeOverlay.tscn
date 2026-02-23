@@ -1,10 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://di7iiwvstv2r5"]
+[gd_scene load_steps=9 format=3 uid="uid://dyuhy5pqbscse"]
 
-[ext_resource type="Script" uid="uid://7vgo4lwpnrf3" path="res://uiScripts/home_overlay.gd" id="1_vkmbp"]
-[ext_resource type="Texture2D" uid="uid://blqfvas705ea0" path="res://assets/icons/icon_settings - Copie.png" id="2_a3shx"]
-[ext_resource type="FontFile" uid="uid://bdkolrntsny1i" path="res://assets/fonts/Baloo2-Bold.ttf" id="2_jlpia"]
-[ext_resource type="PackedScene" uid="uid://dy35jb333yykg" path="res://uiScenes/SettingPopUp.tscn" id="3_51jun"]
-[ext_resource type="Texture2D" uid="uid://bj78k4qjlyvhb" path="res://assets/images/img_escape_title.png" id="5_a3shx"]
+[ext_resource type="Script" uid="uid://7vgo4lwpnrf3" path="res://uiScripts/home_overlay.gd" id="1_fgovn"]
+[ext_resource type="Texture2D" uid="uid://blqfvas705ea0" path="res://assets/icons/icon_settings - Copie.png" id="2_1aav0"]
+[ext_resource type="FontFile" uid="uid://bdkolrntsny1i" path="res://assets/fonts/Baloo2-Bold.ttf" id="3_la72k"]
+[ext_resource type="PackedScene" uid="uid://dy35jb333yykg" path="res://uiScenes/SettingPopUp.tscn" id="4_fxwqt"]
+[ext_resource type="Texture2D" uid="uid://bj78k4qjlyvhb" path="res://assets/images/img_escape_title.png" id="5_eda0p"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_51jun"]
 
@@ -20,67 +20,79 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+pivot_offset = Vector2(672, 96)
 mouse_filter = 1
-script = ExtResource("1_vkmbp")
+script = ExtResource("1_fgovn")
 
-[node name="Button" type="Button" parent="."]
+[node name="VBox" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(1080, 1920)
 layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
+anchors_preset = 15
 anchor_right = 1.0
-offset_left = -156.0
-offset_top = 20.0
-offset_right = -20.0
-offset_bottom = 156.0
-grow_horizontal = 0
-pivot_offset = Vector2(32, 0)
-theme_override_styles/hover = SubResource("StyleBoxEmpty_51jun")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_jlpia")
-theme_override_styles/normal = SubResource("StyleBoxEmpty_a3shx")
-icon = ExtResource("2_a3shx")
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="highscoreLabel" type="Label" parent="."]
-custom_minimum_size = Vector2(1080, 136)
-layout_mode = 0
-offset_right = 1080.0
-offset_bottom = 171.0
+[node name="HBox" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="spacer5" type="Control" parent="VBox/HBox"]
+custom_minimum_size = Vector2(160, 160)
+layout_mode = 2
+
+[node name="highscoreLabel" type="Label" parent="VBox/HBox"]
+custom_minimum_size = Vector2(725, 81)
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_colors/font_shadow_color = Color(0.509804, 0.509804, 0.509804, 1)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 7
-theme_override_fonts/font = ExtResource("2_jlpia")
-theme_override_font_sizes/font_size = 50
+theme_override_fonts/font = ExtResource("3_la72k")
+theme_override_font_sizes/font_size = 75
 text = "HighScore : "
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="PlayLabel" type="Label" parent="."]
+[node name="Button" type="Button" parent="VBox/HBox"]
+custom_minimum_size = Vector2(160, 160)
 layout_mode = 2
-offset_top = 1400.0
-offset_right = 1080.0
-offset_bottom = 1725.0
+theme_override_styles/hover = SubResource("StyleBoxEmpty_51jun")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_jlpia")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_a3shx")
+icon = ExtResource("2_1aav0")
+icon_alignment = 1
+
+[node name="spacer2" type="Control" parent="VBox"]
+custom_minimum_size = Vector2(0, 800)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="escape" type="TextureRect" parent="VBox"]
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("5_eda0p")
+stretch_mode = 3
+
+[node name="spacer3" type="Control" parent="VBox"]
+custom_minimum_size = Vector2(0, 300)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="PlayLabel" type="Label" parent="VBox"]
+layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0.509804, 0.509804, 0.509804, 1)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 7
-theme_override_fonts/font = ExtResource("2_jlpia")
+theme_override_fonts/font = ExtResource("3_la72k")
 theme_override_font_sizes/font_size = 100
-text = "Tap to
-Play"
+text = "Drag to
+Start"
 horizontal_alignment = 1
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="CanvasLayer" type="CanvasLayer" parent="VBox"]
 
-[node name="SettingPopUp" parent="CanvasLayer" instance=ExtResource("3_51jun")]
+[node name="SettingPopUp" parent="VBox/CanvasLayer" instance=ExtResource("4_fxwqt")]
 visible = false
 metadata/_edit_use_anchors_ = true
 
-[node name="home" type="Node2D" parent="."]
-
-[node name="escape" type="TextureRect" parent="home"]
-offset_left = 49.0
-offset_top = 699.0
-offset_right = 1038.0
-offset_bottom = 1281.0
-texture = ExtResource("5_a3shx")
-stretch_mode = 3
-
-[connection signal="pressed" from="Button" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="VBox/HBox/Button" to="." method="_on_settings_button_pressed"]

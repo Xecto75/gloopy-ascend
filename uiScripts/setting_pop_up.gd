@@ -1,8 +1,8 @@
 extends Control
 
 @onready var panel: Control = $PopUpTemplate/OutsidePanel
-
 @onready var blocker: ColorRect= $BlockerOverlay
+@export var home_overlay: Control
 
 signal overlay_close
 
@@ -48,6 +48,7 @@ func hide_popup() -> void:
 		.set_ease(Tween.EASE_IN)
 
 	await tw.finished
+	home_overlay.on_settings_closed()
 
 	panel.visible = false
 	visible = false

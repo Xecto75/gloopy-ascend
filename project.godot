@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="slimeJumper"
-run/main_scene="uid://dj2p7dho6lech"
+run/main_scene="uid://cxs5wa44yuikl"
 config/features=PackedStringArray("4.4", "Mobile")
 config/icon="uid://27nalqnvyb0v"
 
@@ -49,3 +49,4 @@ pointing/emulate_touch_from_mouse=true
 [rendering]
 
 renderer/rendering_method="mobile"
+textures/vram_compression/import_etc2_astc=true

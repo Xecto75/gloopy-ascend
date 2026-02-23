@@ -1,9 +1,11 @@
 extends Control
 
-@onready var setting_overlay = $CanvasLayer/SettingPopUp
-@onready var highscore_text = $highscoreLabel
-@onready var tap_label: Label = $PlayLabel
-
+@onready var setting_overlay = $VBox/CanvasLayer/SettingPopUp
+@onready var highscore_text = $VBox/HBox/highscoreLabel
+@onready var tap_label: Label = $VBox/PlayLabel
+@export var camera: Camera2D
+@onready var settings_button: Control = $VBox/HBox/Button
+var settings_active := false
 signal open_settings 
 signal overlay_close
 signal start_game   # NEW
@@ -18,11 +20,13 @@ func _ready() -> void:
 
 
 func show_overlay() -> void:
+	mouse_filter = Control.MOUSE_FILTER_STOP 
 	highscore_text.text = "Highscore: " + str(SaveData.highscore)
 	visible = true
 
 	tap_label.modulate.a = 1.0
 	_start_tap_pulse()
+
 
 
 func hide_overlay() -> void:
@@ -39,9 +43,25 @@ func _start_tap_pulse() -> void:
 		tween.tween_property(tap_label, "modulate:a", 1.0, 0.9)
 		await tween.finished
 
-func _gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and not event.pressed:
-		emit_signal("start_game")
+func _input(event: InputEvent) -> void:
+	if not visible:
+		return
+		
+	if settings_active:
+		return
+
+	if event is InputEventMouseButton and event.pressed:
+		if settings_button.get_global_rect().has_point(event.position):
+			return
+
+		start_game.emit()
+
+
 
 func _on_settings_button_pressed() -> void:
+	settings_active = true
+	print("button pressed")
 	emit_signal("open_settings")
+	
+func on_settings_closed() -> void:
+	settings_active = false

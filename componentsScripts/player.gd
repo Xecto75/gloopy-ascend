@@ -10,8 +10,10 @@ extends CharacterBody2D
 	$landing2,
 	$landing3
 ]
+@export var pause_button: Control
 
 
+var dead:= false
 @onready var sprite: AnimatedSprite2D = $Sprite2D
 @onready var player_col: CollisionShape2D = $player_col
 @onready var aim_preview := $AimPreview
@@ -40,6 +42,8 @@ const MAX_DRAG_LENGTH := 400.0
 const UNSTICK_COOLDOWN := 0.12
 const DRAG_RESPONSE := 1.6
 const SURFACE_OFFSET := 8.0
+var stuck_rock: Node2D = null
+var rock_local_offset := Vector2.ZERO
 
 const FAIL_SPEED := 1800.0
 const FAIL_TIME := 1.5
@@ -108,19 +112,53 @@ func _ready() -> void:
 # =========================================================
 # INPUT
 # =========================================================
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		if event.pressed:
-			_start_drag()
-		else:
+
+func _input(event: InputEvent) -> void:
+	if dead:
+		return
+
+	# -------------------------
+	# PRESS: start drag (unless press is on pause button)
+	# -------------------------
+	if (event is InputEventMouseButton or event is InputEventScreenTouch) and event.pressed:
+		var pos :Vector2= event.position
+
+		# Block drag start if press begins on Pause button
+		if pause_button and pause_button.visible and pause_button.get_global_rect().has_point(pos):
+			return
+
+		_start_drag()
+		return
+
+	# -------------------------
+	# MOVE: update drag while holding
+	# -------------------------
+	if event is InputEventMouseMotion:
+		if dragging:
+			_update_drag()
+		return
+
+	if event is InputEventScreenDrag:
+		if dragging:
+			_update_drag()
+		return
+
+	# -------------------------
+	# RELEASE: end drag (jump)
+	# -------------------------
+	if (event is InputEventMouseButton or event is InputEventScreenTouch) and not event.pressed:
+		if dragging:
+			_update_drag() # ensure final vector is updated at release moment
 			_end_drag()
-	elif event is InputEventMouseMotion and dragging:
-		_update_drag()
+		return
 
 # =========================================================
 # PHYSICS
 # =========================================================
 func _physics_process(delta: float) -> void:
+
+	if dead:
+		return
 	# --------------------------
 	# AIM PREVIEW
 	# --------------------------
@@ -162,6 +200,9 @@ func _physics_process(delta: float) -> void:
 	# --------------------------
 	if not rock_stuck:
 		velocity.y += GRAVITY * delta
+	if rock_stuck and stuck_rock:
+		global_position = stuck_rock.to_global(rock_local_offset)
+		return
 
 	# --------------------------
 	# PLANET SWEEP (ONLY PLANETS)
@@ -227,8 +268,12 @@ func _physics_process(delta: float) -> void:
 func _on_rock_entered() -> void:
 
 	rock_stuck = true
+	stuck_rock = get_slide_collision(get_slide_collision_count()-1).get_collider()
+
 	velocity = Vector2.ZERO
 	rotation = 0.0
+
+	rock_local_offset = stuck_rock.to_local(global_position)
 
 	is_landing = true
 	sprite.flip_v = true
@@ -296,6 +341,15 @@ func _detach() -> void:
 # =========================================================
 # AIM / LAUNCH
 # =========================================================
+
+func _press_started_on_ui(pos: Vector2) -> bool:
+	for c in get_tree().get_nodes_in_group("ui_block_click"):
+		if c is Control and c.visible:
+			# global rect in canvas coords
+			if c.get_global_rect().has_point(pos):
+				return true
+	return false
+	
 func _start_drag() -> void:
 	if not stuck and not rock_stuck:
 		return
@@ -313,8 +367,8 @@ func _start_drag() -> void:
 
 	sprite.play("charge")
 
-
 func _update_drag() -> void:
+	
 	var current_screen := get_viewport().get_mouse_position()
 	var raw_screen := drag_origin_screen - current_screen
 	if raw_screen.length() < 1.0:
@@ -340,13 +394,14 @@ func _end_drag() -> void:
 
 	if rock_stuck:
 		rock_stuck = false
+		stuck_rock = null
 
 	if stuck:
 		_detach()
 
 	velocity = launch_vector * LAUNCH_POWER
 
-	if spawn_immunity_timer < 0.0:
+	if spawn_immunity_timer <= 0.0:
 		has_launched = true
 		sprite.flip_v = false
 		sprite.play("jump")
@@ -389,16 +444,27 @@ func _reset_fall_fail() -> void:
 # =========================================================
 # DEATH / REVIVE
 # =========================================================
-func _die() -> void:
+func _die():
+	if dead:
+		return
+	dead = true
+	print("PLAYER DIED emitted from id:", get_instance_id())
+	emit_signal("died")
+
+	if dead:
+		return
+	dead = true
+	velocity = Vector2.ZERO
 	fail_sfx.play()
 	air_time = 0.0
 	jump_evaluated = false
-	set_physics_process(false)
 	emit_signal("died")
 
 
 
+
 func _on_revive(spawn_pos: Vector2) -> void:
+	dead = false
 	air_time = 0.0
 	global_position = spawn_pos
 	velocity = Vector2.ZERO

@@ -31,18 +31,8 @@ var score := 0
 const SCORE_SCALE := 0.1
 signal score_update(score: int)
 const SPAWN_POS := Vector2(590, 1380)
-enum GameState {
-	HOME,
-	PLAYING,
-	PAUSED,
-	GAME_OVER
-}
-
-var game_state: GameState = GameState.HOME
 
 func _ready() -> void:
-	process_mode = Node.PROCESS_MODE_ALWAYS
-
 
 	bgm.volume_db = -20
 	bgm.play()
@@ -88,13 +78,9 @@ func _ready() -> void:
 	_show_home()
 
 func _on_home_start_game() -> void:
-	print("start")
 	home_slime.visible = true
-	$World/WorldGenerator.start_generation()
-	game_state = GameState.PLAYING
 
 	var tween := create_tween()
-	
 
 	tween.tween_property(home_overlay, "modulate:a", 0.0, 0.35)
 	tween.parallel().tween_property(home_slime, "modulate:a", 0.0, 0.35)
@@ -107,12 +93,18 @@ func _on_home_start_game() -> void:
 	home_slime.visible = false
 	home_slime.modulate.a = 1.0
 
+	$World/WorldGenerator.start_generation()
 	_refresh_ui()
 
 
 func _process(_delta: float) -> void:
+	if home_slime and home_overlay.visible:
+		home_slime.global_position = camera.global_position + camera.offset
+	
 
 	_update_pause_button_visibility()
+
+
 
 # --------------------------
 # SCORE
@@ -133,10 +125,8 @@ func _on_player_died() -> void:
 	_show_game_over()
 
 func _on_revive_player() -> void:
-	print("STATE → PLAYING (revive)")
-	game_state = GameState.PLAYING
-
 	var gen = $World/WorldGenerator
+	
 	gen.reset()
 	gen.start_generation()
 
@@ -153,43 +143,43 @@ func _on_pause_button_pressed() -> void:
 	call_deferred("_show_pause")
 
 func _show_settings() -> void:
+	pause_popup.hide_popup()
+
+	popup_overlay.visible = true
+	popup_overlay.modulate.a = 0.4
+
 	settings_popup.show_popup()
+
 	_refresh_ui()
 	_fade_in_overlay()
 
-func _show_pause():
-	if game_state == GameState.GAME_OVER:
-		print("SHOW_PAUSE BLOCKED — game over active")
-		return
-
-	if pause_popup.visible:
-		return
-
-	print("STATE → PAUSED")
-	game_state = GameState.PAUSED
-
+func _show_pause() -> void:
+	_hide_all_ui()
 	pause_popup.show_popup()
 	_refresh_ui()
 	_fade_in_overlay()
 
 
 func _show_home() -> void:
-	print("STATE → HOME")
-	game_state = GameState.HOME
-	
 	score_label.visible = false
 	_hide_all_ui()
 	home_overlay.show_overlay()
 	_refresh_ui()
 	_fade_in_overlay()
 
-func _show_game_over():
-	print("STATE → GAME_OVER")
-	game_state = GameState.GAME_OVER   # ← CRITICAL LINE
+func _show_game_over() -> void:
 
+	score_label.visible = false
 	_hide_all_ui()
 
 	game_over_overlay.show_overlay()
+
+
+	game_over_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+
+	_refresh_ui()
+	_fade_in_overlay()
+
 
 
 # --------------------------
@@ -203,51 +193,27 @@ func _hide_all_ui() -> void:
 
 func _refresh_ui() -> void:
 
-	# --------------------------
-	# GAME OVER DARK OVERLAY
-	# --------------------------
-	var game_over_active: bool = game_over_overlay.visible
-
-	gameplay_overlay.visible = game_over_active
-	gameplay_overlay.modulate.a = 0.7 if game_over_active else 0.0
+	# GameOver darkening
+	gameplay_overlay.visible = game_over_overlay.visible
+	gameplay_overlay.modulate.a = 0.7 if game_over_overlay.visible else 0.0
 
 
-	# --------------------------
-	# POPUP DARK OVERLAY (Pause OR Settings)
-	# --------------------------
-	var popup_active: bool = pause_popup.visible or settings_popup.visible
+	# Settings / Pause darkening
+	var popup_active :bool= settings_popup.visible or pause_popup.visible
 
 	popup_overlay.visible = popup_active
 	popup_overlay.mouse_filter = Control.MOUSE_FILTER_STOP if popup_active else Control.MOUSE_FILTER_IGNORE
 
 	if popup_active:
-		create_tween().tween_property(popup_overlay, "modulate:a", 0.4, 0.2)
+		var tween := create_tween()
+		tween.tween_property(popup_overlay, "modulate:a", 0.4, 0.2)
 	else:
 		popup_overlay.modulate.a = 0.0
 
 
-	# --------------------------
-	# TREE PAUSE CONTROL (FIXED)
-	# --------------------------
-	var should_pause: bool = (
-		pause_popup.visible
-		or settings_popup.visible
-		or game_over_overlay.visible
-	)
+	# Pause logic
+	#get_tree().paused = popup_active
 
-	if should_pause and not get_tree().paused:
-		print("TREE PAUSE → TRUE")
-		get_tree().paused = true
-
-	elif not should_pause and get_tree().paused:
-		print("TREE PAUSE → FALSE")
-		get_tree().paused = false
-
-
-	# --------------------------
-	# UPDATE SCORE VISIBILITY
-	# --------------------------
-	_update_score_visibility()
 
 func _update_score_visibility() -> void:
 	var should_show : bool = not home_overlay.visible \
@@ -281,10 +247,6 @@ func _close_topmost_ui() -> void:
 		_on_revive_player()
 		return
 
-#func _input(event):
-#	if game_state == GameState.HOME and event is InputEventScreenTouch and event.pressed:
-#		_on_home_start_game()
-
 
 
 func _on_overlay_gui_input(event: InputEvent) -> void:
@@ -305,21 +267,14 @@ func _on_overlay_gui_input(event: InputEvent) -> void:
 # MISC
 # --------------------------
 func _update_pause_button_visibility() -> void:
+	var gameplay_active : bool = not home_overlay.visible \
+		and not game_over_overlay.visible
 
-	var gameplay_or_paused := (
-		game_state == GameState.PLAYING
-		or game_state == GameState.PAUSED
-	)
-
-	var game_blocked :bool= (
-		home_overlay.visible
-		or game_over_overlay.visible
-	)
-
-	pause_button.visible = gameplay_or_paused and not game_blocked
+	pause_button.visible = gameplay_active and not get_tree().paused
 
 
-
+func _on_pause_button_button_up() -> void:
+	call_deferred("_show_pause")
 	
 func _bonus_score_updated(bonus_type: String) -> void:
 	match bonus_type:
