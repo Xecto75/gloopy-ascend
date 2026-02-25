@@ -3,7 +3,9 @@ extends Control
 @onready var setting_overlay = $CanvasLayer/SettingPopUp
 @onready var score_text = $VBoxContainer/ScoreText
 @onready var game_over_text = $VBoxContainer/GameOverText
-@onready var tap_label: Label = $PlayLabel
+@onready var tap_label: Label = $VBoxContainer/PlayLabel
+@onready var top_offset: Control = $VBoxContainer/Spacer1
+@onready var bottom_offset: Control = $VBoxContainer/Spacer2
 
 signal revive
 signal overlay_close
@@ -19,6 +21,16 @@ var highscore:
 
 
 func _ready() -> void:
+	var safe_area: Rect2 = DisplayServer.get_display_safe_area()
+	var screen_size: Vector2i = DisplayServer.window_get_size()
+	
+	var top_inset: float = safe_area.position.y
+	var bottom_inset: float = screen_size.y - (safe_area.position.y + safe_area.size.y)
+	
+	# safe_area.position.y = top notch height
+	top_offset.custom_minimum_size.y += max(0.0, top_inset)
+	bottom_offset.custom_minimum_size.y += max(0.0, bottom_inset)
+	
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	visible = false
 

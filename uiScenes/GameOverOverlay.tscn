@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c1qvgelq16ijj" path="res://uiScripts/game_over_overlay.gd" id="1_0qxo8"]
 [ext_resource type="FontFile" uid="uid://bdkolrntsny1i" path="res://assets/fonts/Baloo2-Bold.ttf" id="2_m0e6o"]
-[ext_resource type="Texture2D" uid="uid://blqfvas705ea0" path="res://assets/icons/icon_settings - Copie.png" id="3_m0e6o"]
+[ext_resource type="Texture2D" uid="uid://cdjxa4qoxh16o" path="res://assets/icons/icon_settings.png" id="3_m0e6o"]
 [ext_resource type="PackedScene" uid="uid://dy35jb333yykg" path="res://uiScenes/SettingPopUp.tscn" id="3_wd3tk"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wd3tk"]
@@ -29,11 +29,30 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_constants/separation = 80
+
+[node name="Spacer1" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(10, 0)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+alignment = 2
+
+[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(160, 160)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/hover = SubResource("StyleBoxEmpty_wd3tk")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_m0e6o")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_co24j")
+icon = ExtResource("3_m0e6o")
+icon_alignment = 1
 
 [node name="Control" type="Control" parent="VBoxContainer"]
-custom_minimum_size = Vector2(0, 200)
+custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
+size_flags_vertical = 3
 mouse_filter = 2
 
 [node name="GameOverText" type="Label" parent="VBoxContainer"]
@@ -49,6 +68,7 @@ horizontal_alignment = 1
 [node name="Control2" type="Control" parent="VBoxContainer"]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
+size_flags_vertical = 3
 mouse_filter = 2
 
 [node name="ScoreText" type="Label" parent="VBoxContainer"]
@@ -62,19 +82,14 @@ theme_override_font_sizes/font_size = 150
 text = "45"
 horizontal_alignment = 1
 
-[node name="PlayLabel" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -540.0
-offset_top = -420.0
-offset_right = 540.0
-offset_bottom = -95.0
-grow_horizontal = 2
-grow_vertical = 0
+[node name="Control3" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="PlayLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0.509804, 0.509804, 0.509804, 1)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 7
@@ -84,21 +99,10 @@ text = "Press to
 Play Again"
 horizontal_alignment = 1
 
-[node name="Button" type="Button" parent="."]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -156.0
-offset_top = 20.0
-offset_right = -20.0
-offset_bottom = 156.0
-grow_horizontal = 0
-pivot_offset = Vector2(32, 0)
-theme_override_styles/hover = SubResource("StyleBoxEmpty_wd3tk")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_m0e6o")
-theme_override_styles/normal = SubResource("StyleBoxEmpty_co24j")
-icon = ExtResource("3_m0e6o")
+[node name="Spacer2" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+mouse_filter = 2
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -106,4 +110,4 @@ icon = ExtResource("3_m0e6o")
 visible = false
 metadata/_edit_use_anchors_ = true
 
-[connection signal="pressed" from="Button" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/Button" to="." method="_on_settings_button_pressed"]

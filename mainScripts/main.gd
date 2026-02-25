@@ -6,6 +6,7 @@ var target_overlay_alpha := 0.0
 var freeze_dark_overlay := false
 
 @onready var home_slime: Sprite2D = $World/HomeSlime
+@onready var home_escape: Sprite2D = $World/EscapeText
 
 @onready var bgm: AudioStreamPlayer = $BGM
 @onready var player: Node = $World/Player
@@ -41,6 +42,16 @@ enum GameState {
 var game_state: GameState = GameState.HOME
 
 func _ready() -> void:
+	var safe_area: Rect2 = DisplayServer.get_display_safe_area()
+	var screen_size: Vector2i = DisplayServer.window_get_size()
+	
+	var top_inset: float = safe_area.position.y
+	var bottom_inset: float = screen_size.y - (safe_area.position.y + safe_area.size.y)
+	
+	# safe_area.position.y = top notch height
+	pause_button.position.y += max(0.0, top_inset)
+	
+	
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
 
@@ -90,6 +101,7 @@ func _ready() -> void:
 func _on_home_start_game() -> void:
 	print("start")
 	home_slime.visible = true
+	home_escape.visible = true
 	$World/WorldGenerator.start_generation()
 	game_state = GameState.PLAYING
 
@@ -98,6 +110,7 @@ func _on_home_start_game() -> void:
 
 	tween.tween_property(home_overlay, "modulate:a", 0.0, 0.35)
 	tween.parallel().tween_property(home_slime, "modulate:a", 0.0, 0.35)
+	tween.parallel().tween_property(home_escape, "modulate:a", 0.0, 0.35)
 
 	await tween.finished
 
@@ -105,7 +118,9 @@ func _on_home_start_game() -> void:
 	home_overlay.modulate.a = 1.0
 
 	home_slime.visible = false
+	home_escape.visible = false
 	home_slime.modulate.a = 1.0
+	home_escape.modulate.a = 1.0
 
 	_refresh_ui()
 
@@ -326,13 +341,13 @@ func _bonus_score_updated(bonus_type: String) -> void:
 		"big_jump":
 			score += 50
 			_show_bonus_popup("BIG MOVE!\n+50")
-			_vibrate(30)
+			_vibrate(45)
 		"perfect_jump":
 			score += 100
 			_show_bonus_popup("PERFECT JUMP!\n +100")
-			_vibrate(30)
+			_vibrate(45)
 			await get_tree().create_timer(0.08).timeout
-			_vibrate(30)
+			_vibrate(45)
 
 	score_label.text = str(score)
 	_animate_score_punch()

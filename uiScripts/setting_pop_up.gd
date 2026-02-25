@@ -81,3 +81,7 @@ func _on_vibration_button_toggled(on: bool) -> void:
 	vibrations = on
 	SaveData.vibrations_enabled = on
 	SaveData.save_data()
+
+
+func _on_privacy_policy_link_meta_clicked(meta: Variant) -> void:
+	OS.shell_open("https://your-privacy-policy-url.com")

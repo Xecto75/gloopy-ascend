@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://cs2h4u5hqt8tk" path="res://uiScripts/pause_pop_up.gd" id="1_svcrk"]
 [ext_resource type="Theme" uid="uid://c4qhmmo72xepi" path="res://assets/styles/mainTheme.tres" id="2_svcrk"]
 [ext_resource type="Texture2D" uid="uid://x1w5yp2jsnxk" path="res://assets/icons/icon_resume.png" id="5_eqpfo"]
-[ext_resource type="Texture2D" uid="uid://cdjbg2050v5nr" path="res://assets/icons/img_settings.png" id="6_0h3jp"]
+[ext_resource type="Texture2D" uid="uid://cdjxa4qoxh16o" path="res://assets/icons/icon_settings.png" id="5_ipjj2"]
 
 [node name="PausePopUp" type="Control"]
 layout_mode = 3
@@ -54,7 +54,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 theme = ExtResource("2_svcrk")
 theme_override_constants/icon_max_width = 100
-icon = ExtResource("6_0h3jp")
+icon = ExtResource("5_ipjj2")
 icon_alignment = 1
 vertical_icon_alignment = 0
 

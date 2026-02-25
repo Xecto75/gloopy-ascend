@@ -13,7 +13,12 @@ config_version=5
 config/name="slimeJumper"
 run/main_scene="uid://cxs5wa44yuikl"
 config/features=PackedStringArray("4.4", "Mobile")
+boot_splash/show_image=false
 config/icon="uid://27nalqnvyb0v"
+
+[audio]
+
+buses/default_bus_layout="uid://brelndklg7vv4"
 
 [autoload]
 

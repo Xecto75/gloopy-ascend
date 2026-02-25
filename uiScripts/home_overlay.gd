@@ -5,12 +5,25 @@ extends Control
 @onready var tap_label: Label = $VBox/PlayLabel
 @export var camera: Camera2D
 @onready var settings_button: Control = $VBox/HBox/Button
+@onready var top_offset: Control = $VBox/Spacer1
+@onready var bottom_offset: Control = $VBox/Spacer4
+
 var settings_active := false
 signal open_settings 
 signal overlay_close
 signal start_game   # NEW
 
 func _ready() -> void:
+	var safe_area: Rect2 = DisplayServer.get_display_safe_area()
+	var screen_size: Vector2i = DisplayServer.window_get_size()
+	
+	var top_inset: float = safe_area.position.y
+	var bottom_inset: float = screen_size.y - (safe_area.position.y + safe_area.size.y)
+	
+	# safe_area.position.y = top notch height
+	top_offset.custom_minimum_size.y += max(0.0, top_inset)
+	bottom_offset.custom_minimum_size.y += max(0.0, bottom_inset)
+		
 	highscore_text.text = "Highscore: " + str(SaveData.highscore)
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	visible = false
