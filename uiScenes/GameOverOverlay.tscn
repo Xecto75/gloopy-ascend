@@ -50,9 +50,8 @@ icon = ExtResource("3_m0e6o")
 icon_alignment = 1
 
 [node name="Control" type="Control" parent="VBoxContainer"]
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
-size_flags_vertical = 3
 mouse_filter = 2
 
 [node name="GameOverText" type="Label" parent="VBoxContainer"]

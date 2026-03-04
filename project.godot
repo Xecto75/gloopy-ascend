@@ -13,7 +13,9 @@ config_version=5
 config/name="slimeJumper"
 run/main_scene="uid://cxs5wa44yuikl"
 config/features=PackedStringArray("4.4", "Mobile")
+boot_splash/bg_color=Color(0.125911, 0.125911, 0.125911, 1)
 boot_splash/show_image=false
+boot_splash/image="uid://drtnll4p0u2n0"
 config/icon="uid://27nalqnvyb0v"
 
 [audio]
@@ -23,6 +25,7 @@ buses/default_bus_layout="uid://brelndklg7vv4"
 [autoload]
 
 SaveData="*res://mainScripts/SaveData.gd"
+AdsManager="*res://mainScripts/AdsManager.gd"
 
 [display]
 
@@ -35,9 +38,14 @@ window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 window/handheld/orientation=1
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/admob/plugin.cfg")
+
 [file_customization]
 
 folder_colors={
+"res://addons/": "red",
 "res://assets/": "pink",
 "res://componentsScenes/": "yellow",
 "res://componentsScripts/": "yellow",

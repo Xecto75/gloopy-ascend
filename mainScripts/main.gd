@@ -145,6 +145,7 @@ func _on_player_died() -> void:
 	score = 0
 	max_height = 0
 	score_label.text = ""
+	AdsManager.on_player_death()
 	_show_game_over()
 
 func _on_revive_player() -> void:
