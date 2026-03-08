@@ -6,8 +6,8 @@ extends CanvasLayer
 
 @onready var rect: ColorRect = $ColorRect
 
-const STARS_START_Y := -27000.0
-const STARS_FULL_Y := -30000.0
+const STARS_START_Y := -65000.0
+const STARS_FULL_Y := -75000.0
 
 # ==================================================
 # SKY COLOR
