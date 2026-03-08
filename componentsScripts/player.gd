@@ -351,8 +351,8 @@ func _press_started_on_ui(pos: Vector2) -> bool:
 	return false
 	
 func _start_drag() -> void:
-	if not stuck and not rock_stuck:
-		return
+	#if not stuck and not rock_stuck:
+		#return
 
 	dragging = true
 	drag_origin_screen = get_viewport().get_mouse_position()
@@ -389,8 +389,8 @@ func _end_drag() -> void:
 	dragging = false
 	aim_preview.hide_preview()
 	#dont fly
-	if not stuck and not rock_stuck:
-		return
+	#if not stuck and not rock_stuck:
+	#	return
 
 	if rock_stuck:
 		rock_stuck = false

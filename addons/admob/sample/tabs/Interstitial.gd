@@ -55,7 +55,7 @@ func _update_ui_state(is_loaded: bool) -> void:
 
 func _on_load_pressed() -> void:
 	_log("Loading interstitial...")
-	InterstitialAdLoader.new().load("ca-app-pub-3940256099942544/1033173712", AdRequest.new(), _load_callback)
+	InterstitialAdLoader.new().load(SaveData.interstitial_pub_id, AdRequest.new(), _load_callback)
 
 func _on_show_pressed() -> void:
 	if _interstitial_ad:

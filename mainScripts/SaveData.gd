@@ -1,11 +1,30 @@
 extends Node
 
+extends Node
+
+# Detect platform
+var is_android := OS.get_name() == "Android"
+var is_ios := OS.get_name() == "iOS"
+
+# IDs
+var game_id := ""
+var interstitial_pub_id := ""
+
+func _ready():
+	if is_android:
+		game_id = "ca-app-pub-1699112300277782~2519884646"
+		interstitial_pub_id = "ca-app-pub-1699112300277782/9257371744"
+	elif is_ios:
+		game_id = "ca-app-pub-1699112300277782~7397970521"
+		interstitial_pub_id = "ca-app-pub-1699112300277782/4842795658"
+		
 const SAVE_PATH := "user://gloopy_save.cfg"
 
 var highscore := 0
 var sfx_enabled := true
 var music_enabled := true
 var vibrations_enabled := true
+
 
 func _ready() -> void:
 	load_data()

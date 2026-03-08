@@ -58,7 +58,7 @@ func _on_load_banner_pressed() -> void:
 	_log("Loading adaptive banner...")
 	
 	var ad_size := AdSize.get_current_orientation_anchored_adaptive_banner_ad_size(AdSize.FULL_WIDTH)
-	_ad_view = AdView.new("ca-app-pub-3940256099942544/2934735716", ad_size, _ad_position)
+	_ad_view = AdView.new(SaveData.interstitial_pub_id, ad_size, _ad_position)
 	_ad_view.ad_listener = _ad_listener
 	_ad_view.load_ad(AdRequest.new())
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://cxs5wa44yuikl"]
+[gd_scene load_steps=28 format=3 uid="uid://cxs5wa44yuikl"]
 
 [ext_resource type="Script" uid="uid://cgt1lwil75d14" path="res://mainScripts/CloudsGen.gd" id="1_bggie"]
 [ext_resource type="Script" uid="uid://dylf35miitnse" path="res://mainScripts/main.gd" id="1_ei0ll"]
@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://b6lntv0lqus47" path="res://uiScenes/PausePopUp.tscn" id="5_gnaye"]
 [ext_resource type="PackedScene" uid="uid://b6i4jsfq13d08" path="res://componentsScenes/SkyBackground.tscn" id="6_ei0ll"]
 [ext_resource type="PackedScene" uid="uid://dy35jb333yykg" path="res://uiScenes/SettingPopUp.tscn" id="6_og8m4"]
+[ext_resource type="Script" uid="uid://c5pvj4m4dhvc1" path="res://mainScripts/stars.gd" id="7_rj6wr"]
 [ext_resource type="FontFile" uid="uid://ii4ynd7hrmxh" path="res://assets/fonts/Chewy-Regular.ttf" id="8_5ftk5"]
 [ext_resource type="FontFile" uid="uid://bdkolrntsny1i" path="res://assets/fonts/Baloo2-Bold.ttf" id="8_8dxbe"]
 [ext_resource type="PackedScene" uid="uid://dyuhy5pqbscse" path="res://uiScenes/HomeOverlay.tscn" id="13_1qxlk"]
@@ -66,7 +67,7 @@ texture = ExtResource("5_7kjiq")
 layer = -10
 camera = NodePath("../Player/Sprite2D/Camera2D")
 player = NodePath("../Player")
-stars = NodePath("../StarsLayer/Stars")
+stars = NodePath("Stars")
 
 [node name="ColorRect" parent="World/SkyBackground" index="0"]
 z_index = -99
@@ -75,17 +76,15 @@ offset_top = -896.0
 offset_right = 573.0
 offset_bottom = 796.0
 
+[node name="Stars" type="Node2D" parent="World/SkyBackground"]
+script = ExtResource("7_rj6wr")
+
 [node name="Rock" type="StaticBody2D" parent="World"]
 collision_layer = 4
 
 [node name="RockCol" type="CollisionShape2D" parent="World/Rock"]
 position = Vector2(598, 1460)
 shape = SubResource("RectangleShape2D_x5oen")
-
-[node name="StarsLayer" type="CanvasLayer" parent="World"]
-layer = -9
-
-[node name="Stars" type="Node2D" parent="World/StarsLayer"]
 
 [node name="GroundColor" type="ColorRect" parent="World"]
 z_index = -1

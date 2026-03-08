@@ -6,6 +6,9 @@ extends CanvasLayer
 
 @onready var rect: ColorRect = $ColorRect
 
+const STARS_START_Y := -27000.0
+const STARS_FULL_Y := -30000.0
+
 # ==================================================
 # SKY COLOR
 # ==================================================
@@ -37,6 +40,7 @@ func _process(delta: float) -> void:
 		return
 
 	_update_sky_color(delta)
+	_update_stars()
 
 # ==================================================
 # SKY COLOR
@@ -90,3 +94,13 @@ func _random_point_outside_rect(rect: Rect2, margin: float) -> Vector2:
 				rect.position.x + rect.size.x + margin,
 				randf_range(rect.position.y - margin, rect.position.y + rect.size.y + margin)
 			)
+			
+func _update_stars() -> void:
+	if stars == null:
+		return
+
+	var py := player.global_position.y
+	var t := inverse_lerp(STARS_START_Y, STARS_FULL_Y, py)
+	t = clamp(t, 0.0, 1.0)
+
+	stars.set_alpha(t)

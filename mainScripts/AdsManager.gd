@@ -2,7 +2,7 @@ extends Node
 
 var interstitial_ad
 var interstitial_loader
-var interstitial_id := "ca-app-pub-3940256099942544/1033173712"
+var interstitial_id : String = SaveData.interstitial_pub_id
 
 var death_counter := 0
 var last_ad_time := 0.0
