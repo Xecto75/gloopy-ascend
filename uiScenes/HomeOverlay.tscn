@@ -58,6 +58,7 @@ vertical_alignment = 1
 [node name="Button" type="Button" parent="VBox/HBox"]
 custom_minimum_size = Vector2(160, 160)
 layout_mode = 2
+focus_mode = 0
 theme_override_styles/hover = SubResource("StyleBoxEmpty_51jun")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_jlpia")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_a3shx")

@@ -178,6 +178,7 @@ offset_left = -160.0
 offset_bottom = 160.0
 grow_horizontal = 0
 pivot_offset = Vector2(136, 0)
+focus_mode = 0
 theme_override_styles/hover = SubResource("StyleBoxEmpty_ei0ll")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_6e7h5")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_hawsd")
