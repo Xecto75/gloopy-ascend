@@ -84,4 +84,4 @@ func _on_vibration_button_toggled(on: bool) -> void:
 
 
 func _on_privacy_policy_link_meta_clicked(meta: Variant) -> void:
-	OS.shell_open("https://xecto75.github.io/gloopy-ascend/")
+	OS.shell_open("https://avarioapps.com/privacyPolicies/gloopyEscape_privacy.html")
