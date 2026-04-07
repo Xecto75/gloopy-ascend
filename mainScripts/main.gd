@@ -4,7 +4,7 @@ extends Node2D
 @onready var pause_button: Button = $UI/PauseButton
 var target_overlay_alpha := 0.0
 var freeze_dark_overlay := false
-
+var score_tween: Tween
 @onready var home_slime: Sprite2D = $World/HomeSlime
 @onready var home_escape: Sprite2D = $World/EscapeText
 
@@ -161,7 +161,6 @@ func _on_revive_player() -> void:
 	_hide_all_ui()
 	_refresh_ui()
 
-
 # --------------------------
 # UI OPENERS
 # --------------------------
@@ -266,22 +265,28 @@ func _refresh_ui() -> void:
 	_update_score_visibility()
 
 func _update_score_visibility() -> void:
-	var should_show : bool = not home_overlay.visible \
-		and not game_over_overlay.visible
+	var should_show: bool = not home_overlay.visible and not game_over_overlay.visible
 
-	if should_show and not score_label.visible:
+	if score_tween:
+		score_tween.kill()
+		score_tween = null
+
+	if should_show:
 		score_label.visible = true
-		score_label.modulate.a = 0.0
+		score_label.modulate.a = 1.0
 
-		var tween := create_tween()
-		tween.tween_property(score_label, "modulate:a", 1.0, 0.25)
+	else:
+		score_tween = create_tween()
+		score_tween.tween_property(score_label, "modulate:a", 0.0, 0.2)
+		await score_tween.finished
 
-	elif not should_show and score_label.visible:
-		var tween := create_tween()
-		tween.tween_property(score_label, "modulate:a", 0.0, 0.2)
-		await tween.finished
+		if not home_overlay.visible and not game_over_overlay.visible:
+			return
+
 		score_label.visible = false
-
+		score_tween = null
+		
+		
 func _close_topmost_ui() -> void:
 
 	if settings_popup.visible:

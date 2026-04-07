@@ -95,6 +95,7 @@ var was_touching_rock := false
 # READY
 # =========================================================
 func _ready() -> void:
+	fail_sfx.process_mode = Node.PROCESS_MODE_ALWAYS
 	base_camera_offset = camera.offset
 	input_locked = true
 	spawn_immunity_timer = SPAWN_IMMUNITY_TIME
@@ -447,17 +448,16 @@ func _reset_fall_fail() -> void:
 func _die():
 	if dead:
 		return
-	dead = true
-	print("PLAYER DIED emitted from id:", get_instance_id())
-	emit_signal("died")
 
-	if dead:
-		return
 	dead = true
+
+	print("PLAYER DIED emitted from id:", get_instance_id())
+
 	velocity = Vector2.ZERO
 	fail_sfx.play()
 	air_time = 0.0
 	jump_evaluated = false
+
 	emit_signal("died")
 
 

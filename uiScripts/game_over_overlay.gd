@@ -3,6 +3,7 @@ extends Control
 @onready var setting_overlay = $CanvasLayer/SettingPopUp
 @onready var score_text = $VBoxContainer/ScoreText
 @onready var game_over_text = $VBoxContainer/GameOverText
+@onready var highscore_text = $VBoxContainer/HighScoreText
 @onready var tap_label: Label = $VBoxContainer/PlayLabel
 @onready var top_offset: Control = $VBoxContainer/Spacer1
 @onready var bottom_offset: Control = $VBoxContainer/Spacer2
@@ -62,13 +63,16 @@ func _on_settings_button_pressed() -> void:
 	
 func _on_score_updated(score: int) -> void:
 	if score > highscore:
+		highscore_text.visible = false
 		highscore = score
 		score_text.add_theme_color_override("font_color", Color("FFE666"))
 		score_text.add_theme_color_override("font_shadow_color", Color("BFA200"))
-		score_text.text = ("New Higscore !\n" + str(score))
+		score_text.text = ("New Best !\n" + str(score))
 		await get_tree().create_timer(0.1).timeout
 		_pop_highscore_text(score_text)
 	else:
+		highscore_text.visible = true
+		highscore_text.text = ("Best : " + str(highscore))
 		score_text.text = str(score)
 		score_text.add_theme_color_override("font_color", Color("ffffff"))
 		score_text.add_theme_color_override("font_shadow_color", Color("828282"))

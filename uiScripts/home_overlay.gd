@@ -24,7 +24,7 @@ func _ready() -> void:
 	top_offset.custom_minimum_size.y += max(0.0, top_inset)
 	bottom_offset.custom_minimum_size.y += max(0.0, bottom_inset)
 		
-	highscore_text.text = "Highscore: " + str(SaveData.highscore)
+	highscore_text.text = "Best: " + str(SaveData.highscore)
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	visible = false
 	
@@ -34,7 +34,7 @@ func _ready() -> void:
 
 func show_overlay() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP 
-	highscore_text.text = "Highscore: " + str(SaveData.highscore)
+	highscore_text.text = "Best: " + str(SaveData.highscore)
 	visible = true
 
 	tap_label.modulate.a = 1.0
