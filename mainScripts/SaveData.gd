@@ -23,6 +23,7 @@ func _ready():
 	elif is_ios:
 		game_id = "ca-app-pub-1699112300277782~7397970521"
 		interstitial_pub_id = "ca-app-pub-1699112300277782/4842795658"
+	print(interstitial_pub_id)
 	load_data()
 
 
