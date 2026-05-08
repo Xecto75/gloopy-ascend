@@ -7,6 +7,7 @@ var freeze_dark_overlay := false
 var score_tween: Tween
 @onready var home_slime: Sprite2D = $World/HomeSlime
 @onready var home_escape: Sprite2D = $World/EscapeText
+@onready var lava = $World/Lava
 
 @onready var bgm: AudioStreamPlayer = $BGM
 @onready var player: Node = $World/Player
@@ -100,6 +101,7 @@ func _ready() -> void:
 
 func _on_home_start_game() -> void:
 	print("start")
+	$World/Lava.active = true
 	home_slime.visible = true
 	home_escape.visible = true
 	$World/WorldGenerator.start_generation()
@@ -157,6 +159,10 @@ func _on_revive_player() -> void:
 	gen.start_generation()
 
 	player._on_revive(SPAWN_POS)
+	
+	print("MOVE LAVA")
+	$World/Lava.reset()
+	$World/Lava.active = true
 
 	_hide_all_ui()
 	_refresh_ui()
@@ -190,6 +196,7 @@ func _show_pause():
 
 func _show_home() -> void:
 	print("STATE → HOME")
+	$World/Lava.active = false
 	game_state = GameState.HOME
 	
 	score_label.visible = false

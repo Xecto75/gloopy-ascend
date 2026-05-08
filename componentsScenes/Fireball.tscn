@@ -1,0 +1,66 @@
+[gd_scene load_steps=11 format=3 uid="uid://gvbgwymcmms0"]
+
+[ext_resource type="Script" uid="uid://pshofwmrjjqg" path="res://componentsScripts/fireball.gd" id="1_8mnka"]
+[ext_resource type="Texture2D" uid="uid://clt1riadivkg8" path="res://assets/animations/firaball_anim.png" id="2_8mnka"]
+[ext_resource type="Texture2D" uid="uid://by3phev652rmc" path="res://assets/images/fireball.png" id="2_kvfrr"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8mnka"]
+atlas = ExtResource("2_8mnka")
+region = Rect2(0, 0, 250, 400)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kvfrr"]
+atlas = ExtResource("2_8mnka")
+region = Rect2(250, 0, 250, 400)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7chxa"]
+atlas = ExtResource("2_8mnka")
+region = Rect2(500, 0, 250, 400)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bo8wk"]
+atlas = ExtResource("2_8mnka")
+region = Rect2(750, 0, 250, 400)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qxv1l"]
+atlas = ExtResource("2_8mnka")
+region = Rect2(1000, 0, 250, 400)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_erf6h"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8mnka")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kvfrr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7chxa")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bo8wk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qxv1l")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_kvfrr"]
+radius = 123.329
+
+[node name="Fireball" type="Node2D"]
+script = ExtResource("1_8mnka")
+
+[node name="Flame" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_erf6h")
+
+[node name="Ball" type="Sprite2D" parent="."]
+texture = ExtResource("2_kvfrr")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(-7, -186)
+shape = SubResource("CircleShape2D_kvfrr")

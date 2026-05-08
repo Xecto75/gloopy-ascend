@@ -1,0 +1,45 @@
+[gd_scene load_steps=6 format=3 uid="uid://r7qlpaykpmib"]
+
+[ext_resource type="Script" uid="uid://bhlm7rm8fwjda" path="res://componentsScripts/Lava.gd" id="1_187rg"]
+[ext_resource type="Texture2D" uid="uid://ca4sul7ihmjcq" path="res://assets/icons/lava.png" id="2_jgfng"]
+[ext_resource type="PackedScene" uid="uid://yuumooqtadw" path="res://componentsScenes/Warning.tscn" id="3_ttuqm"]
+[ext_resource type="PackedScene" uid="uid://gvbgwymcmms0" path="res://componentsScenes/Fireball.tscn" id="4_nxqf3"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_187rg"]
+size = Vector2(139904, 265)
+
+[node name="Lava" type="Node2D"]
+process_mode = 1
+script = ExtResource("1_187rg")
+
+[node name="Visual" type="Node2D" parent="."]
+process_mode = 1
+
+[node name="Sprite2D" type="Sprite2D" parent="Visual"]
+process_mode = 1
+position = Vector2(-4404, 1391)
+texture = ExtResource("2_jgfng")
+
+[node name="Sprite2D2" type="Sprite2D" parent="Visual"]
+process_mode = 1
+position = Vector2(187, 1393)
+texture = ExtResource("2_jgfng")
+
+[node name="Sprite2D3" type="Sprite2D" parent="Visual"]
+position = Vector2(4778, 1394)
+texture = ExtResource("2_jgfng")
+
+[node name="Hitbox" type="Area2D" parent="."]
+process_mode = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2(4118, 382.5)
+shape = SubResource("RectangleShape2D_187rg")
+
+[node name="Warning" type="CanvasLayer" parent="."]
+
+[node name="Warning" parent="Warning" instance=ExtResource("3_ttuqm")]
+
+[node name="Fireball" parent="." instance=ExtResource("4_nxqf3")]
+
+[connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]
