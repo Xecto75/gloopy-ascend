@@ -7,10 +7,13 @@
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("1_iq7m5")
+blink_time = 0.25
 
 [node name="TextureRect" type="TextureRect" parent="."]
-offset_left = 74.0
-offset_top = 1268.0
-offset_right = 199.0
-offset_bottom = 1418.0
+layout_mode = 1
+offset_left = -62.0
+offset_top = -75.0
+offset_right = 63.0
+offset_bottom = 75.0
+pivot_offset = Vector2(62.5, 75)
 texture = ExtResource("2_iq7m5")

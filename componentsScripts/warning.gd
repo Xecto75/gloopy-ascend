@@ -6,16 +6,14 @@ extends Control
 
 signal finished
 
+
 func _ready() -> void:
-	visible = false
-	
+	modulate.a = 0.0
+
+
 func start(screen_x: float, screen_y: float) -> void:
 
-	visible = true
-
-	global_position = Vector2(screen_x, screen_y)
-
-	modulate.a = 0.0
+	position = Vector2(screen_x, screen_y)
 
 	for i in blink_count:
 
@@ -26,4 +24,5 @@ func start(screen_x: float, screen_y: float) -> void:
 		await get_tree().create_timer(blink_time).timeout
 
 	finished.emit()
+
 	queue_free()

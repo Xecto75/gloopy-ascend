@@ -11,6 +11,12 @@ size = Vector2(139904, 265)
 [node name="Lava" type="Node2D"]
 process_mode = 1
 script = ExtResource("1_187rg")
+fireball_scene = ExtResource("4_nxqf3")
+warning_scene = ExtResource("3_ttuqm")
+
+[node name="Warnings" type="CanvasLayer" parent="."]
+
+[node name="Fireballs" type="Node2D" parent="."]
 
 [node name="Visual" type="Node2D" parent="."]
 process_mode = 1
@@ -35,11 +41,5 @@ process_mode = 1
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
 position = Vector2(4118, 382.5)
 shape = SubResource("RectangleShape2D_187rg")
-
-[node name="Warning" type="CanvasLayer" parent="."]
-
-[node name="Warning" parent="Warning" instance=ExtResource("3_ttuqm")]
-
-[node name="Fireball" parent="." instance=ExtResource("4_nxqf3")]
 
 [connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]

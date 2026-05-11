@@ -9,10 +9,13 @@ extends Node2D
 @export var min_rise_speed := 100.0
 @export var max_rise_speed := 1000.0
 
-@export var target_distance := 2500.0
-@export var max_distance := 7000.0
+const FIREBALL_WARNING_DISTANCE := 1400.0
+const WARNING_Y := 1800.0
 
-@export var scroll_speed := 120.0
+@export var target_distance := 900.0
+@export var max_distance := 3200.0
+
+@export var scroll_speed := 200.0
 
 @onready var sprite1: Sprite2D = $Visual/Sprite2D
 @onready var sprite2: Sprite2D = $Visual/Sprite2D2
@@ -33,13 +36,13 @@ var start_y := 1500.0
 
 const TELEPORT_DISTANCE := 5000.0
 
-const FIREBALL_INTERVAL := 10.0
+const FIREBALL_INTERVAL := 2.0
 
 const FIREBALL_START_Y := -10000.0
 const FIREBALL_FULL_Y := -60000.0
 
-const FIREBALL_MIN_CHANCE := 0.05
-const FIREBALL_MAX_CHANCE := 0.6
+const FIREBALL_MIN_CHANCE := 0.8
+const FIREBALL_MAX_CHANCE := 0.9
 
 
 func _ready() -> void:
@@ -61,6 +64,13 @@ func _ready() -> void:
 
 
 func reset():
+	for child in fireballs.get_children():
+		child.queue_free()
+
+	for child in warnings.get_children():
+		child.queue_free()
+
+	fireball_timer = 0.0
 
 	global_position.y = start_y
 	active = false
@@ -161,6 +171,11 @@ func _fireball_logic(delta: float) -> void:
 
 	var py: float = player.global_position.y
 
+	var lava_distance: float = global_position.y - py
+
+	if lava_distance > FIREBALL_WARNING_DISTANCE:
+		return
+
 	var chance_t: float = inverse_lerp(
 		FIREBALL_START_Y,
 		FIREBALL_FULL_Y,
@@ -180,8 +195,9 @@ func _fireball_logic(delta: float) -> void:
 
 	_spawn_fireball_event()
 
-
 func _spawn_fireball_event() -> void:
+
+	print("LAUNCH FIREBALL")
 
 	var viewport_width: float = get_viewport_rect().size.x
 
@@ -191,26 +207,27 @@ func _spawn_fireball_event() -> void:
 		viewport_width * 0.18
 	)
 
-	var world_x: float = camera.global_position.x + offset_x
-
 	# warning screen X
-	var screen_x: float = viewport_width * 0.5 + offset_x
-
-	await get_tree().process_frame
-
-	# warning screen Y
-	var screen_y: float = get_viewport_rect().size.y * 0.5 + (
-		global_position.y - camera.global_position.y
-	) - 100.0
+	var screen_x: float = (
+		viewport_width * 0.5
+		+ offset_x
+	)
 
 	# WARNING
 	var warning = warning_scene.instantiate()
 
 	warnings.add_child(warning)
 
-	warning.start(screen_x, screen_y)
+	warning.start(screen_x, WARNING_Y)
 
 	await warning.finished
+
+	# convert warning screen position back to world
+	var world_x: float = (
+		(warning.global_position.x - viewport_width * 0.5)
+		* camera.zoom.x
+		+ camera.global_position.x
+	)
 
 	# FIREBALL
 	var fireball = fireball_scene.instantiate()
