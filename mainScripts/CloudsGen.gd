@@ -6,18 +6,19 @@ extends Node2D
 # --------------------------------------------------
 # SPAWN / DESPAWN
 # --------------------------------------------------
-const SPAWN_STEP_DISTANCE: float = 600.0
+const SPAWN_CHECK_DISTANCE: float = 400.0
 const DESPAWN_DISTANCE: float = 3500.0
+
+const CLOUD_RENDER_DISTANCE: float = 3500.0
 
 const MAX_SPAWN_ATTEMPTS: int = 10
 const MIN_CLOUD_DISTANCE: float = 300.0
-
 # --------------------------------------------------
 # SPAWN BAND (RENDER DISTANCE)
 # --------------------------------------------------
 const CLOUD_SPAWN_MIN_Y_OFFSET: float = 1500.0
 const CLOUD_SPAWN_MAX_Y_OFFSET: float = 3500.0
-const CLOUD_X_SPREAD: float = 1200.0
+const CLOUD_X_SPREAD: float = 3000.0
 
 # --------------------------------------------------
 # ALTITUDE DENSITY
@@ -25,7 +26,7 @@ const CLOUD_X_SPREAD: float = 1200.0
 const CLOUD_DENSITY_START_Y: float = -2000.0
 const CLOUD_DENSITY_END_Y: float = -60000.0
 
-const CLOUD_DENSITY_MULTIPLIER := 2.0
+const CLOUD_DENSITY_MULTIPLIER := 0.15
 
 # --------------------------------------------------
 # ALTITUDE FADE (NEW)
@@ -59,6 +60,7 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+
 	if player == null:
 		return
 
@@ -66,14 +68,23 @@ func _process(delta: float) -> void:
 		last_spawn_y = player.global_position.y
 		return
 
-	while player.global_position.y < last_spawn_y - SPAWN_STEP_DISTANCE:
-		last_spawn_y -= SPAWN_STEP_DISTANCE
-		_try_spawn_cloud()
+	while player.global_position.y < last_spawn_y - SPAWN_CHECK_DISTANCE:
+
+		last_spawn_y -= SPAWN_CHECK_DISTANCE
+
+		var density: float = _density_at_height(
+			player.global_position.y
+		)
+
+		var cloud_count: int = roundi(
+			lerp(0.0, 2.0, density)
+		)
+
+		_try_spawn_cloud(cloud_count)
 
 	_update_cloud_drift(delta)
 	_despawn_old_clouds()
-	_update_cloud_opacity() # <-- NEW
-
+	_update_cloud_opacity()
 
 # --------------------------------------------------
 # DENSITY
@@ -108,35 +119,36 @@ func _update_cloud_opacity() -> void:
 # --------------------------------------------------
 # SPAWNING
 # --------------------------------------------------
-func _try_spawn_cloud() -> void:
-	var py: float = player.global_position.y
-	var density : float = clamp(
-		_density_at_height(py) * CLOUD_DENSITY_MULTIPLIER,
-		0.0,
-		1.0
-	)
+func _try_spawn_cloud(count: int) -> void:
 
-	if density <= 0.0:
-		return
+	for j in range(count):
 
-	for i in range(MAX_SPAWN_ATTEMPTS):
-		var pos: Vector2 = _random_cloud_position()
-		if _is_position_valid(pos):
-			if randf() <= density:
+		for i in range(MAX_SPAWN_ATTEMPTS):
+
+			var pos: Vector2 = _random_cloud_position()
+
+			if _is_position_valid(pos):
+
 				var cloud := _spawn_cloud(pos)
+
 				clouds.append(cloud)
-			return
 
-
+				break
+	
+	
+	
 func _random_cloud_position() -> Vector2:
+
 	var px: float = player.global_position.x
 	var py: float = player.global_position.y
 
 	return Vector2(
 		px + randf_range(-CLOUD_X_SPREAD, CLOUD_X_SPREAD),
-		py - randf_range(CLOUD_SPAWN_MIN_Y_OFFSET, CLOUD_SPAWN_MAX_Y_OFFSET)
+		py - randf_range(
+			CLOUD_RENDER_DISTANCE,
+			CLOUD_RENDER_DISTANCE + 2000.0
+		)
 	)
-
 
 func _is_position_valid(pos: Vector2) -> bool:
 	for c: Sprite2D in clouds:

@@ -22,7 +22,8 @@
 
 const Library := preload("res://addons/admob/internal/exporters/android/library.gd")
 
-var APPLICATION_ID :String= SaveData.game_id
+const APPLICATION_ID := "ca-app-pub-1699112300277782~2519884646"
+
 var libraries: Array[Library] = [
 	# Main Plugin
 	Library.new("ads", true), # Disable if you don't want to use AdMob.

@@ -20,8 +20,6 @@ var score_tween: Tween
 @onready var gameplay_overlay = $UI/GameplayDarkOverlay
 @onready var popup_overlay = $UI/PopupDarkOverlay
 
-
-
 @onready var score_label: Label = $UI/ScoreLabel
 @onready var bonus_label: Label = $UI/BonusLabel
 
@@ -43,6 +41,16 @@ enum GameState {
 var game_state: GameState = GameState.HOME
 
 func _ready() -> void:
+	print("AF_PLUGIN_CHECK: ", Engine.has_singleton("AppsFlyerPlugin"))
+	if OS.get_name() == "Android":
+		if Engine.has_singleton("AppsFlyerPlugin"):
+			var af = Engine.get_singleton("AppsFlyerPlugin")
+			
+			af.init(
+				"izwPVApAiRH3tMcrZvWkU", 
+				"com.xecto.slimejumper"
+			)
+			
 	var safe_area: Rect2 = DisplayServer.get_display_safe_area()
 	var screen_size: Vector2i = DisplayServer.window_get_size()
 	

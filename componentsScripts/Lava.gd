@@ -161,6 +161,7 @@ func _on_hitbox_body_entered(body: Node2D) -> void:
 
 
 func _fireball_logic(delta: float) -> void:
+	return
 
 	fireball_timer += delta
 
