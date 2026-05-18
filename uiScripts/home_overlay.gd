@@ -23,11 +23,11 @@ func _ready() -> void:
 	# safe_area.position.y = top notch height
 	top_offset.custom_minimum_size.y += max(0.0, top_inset)
 	bottom_offset.custom_minimum_size.y += max(0.0, bottom_inset)
-		
+
 	highscore_text.text = "Best: " + str(SaveData.highscore)
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	visible = false
-	
+
 	# IMPORTANT: Home must receive clicks
 	mouse_filter = Control.MOUSE_FILTER_STOP
 

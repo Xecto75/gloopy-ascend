@@ -1,0 +1,39 @@
+[gd_scene load_steps=7 format=3 uid="uid://dxqj532t0ab0p"]
+
+[ext_resource type="Texture2D" uid="uid://dymtq2ewa5siy" path="res://assets/animations/particule.png" id="1_q5q1t"]
+
+[sub_resource type="Curve" id="Curve_q5q1t"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1e-05, 1), 0.0, 0.0, 0, 0, Vector2(0.847594, 0.891779), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_ncjjg"]
+curve = SubResource("Curve_q5q1t")
+
+[sub_resource type="Curve" id="Curve_y1ial"]
+_data = [Vector2(0, 0.404787), 0.0, 0.0, 0, 0, Vector2(0.350267, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_veyfh"]
+curve = SubResource("Curve_y1ial")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ncjjg"]
+lifetime_randomness = 0.5
+particle_flag_disable_z = true
+emission_shape_scale = Vector3(700, 20, 1)
+emission_shape = 3
+emission_box_extents = Vector3(1, 1, 1)
+direction = Vector3(0, -1, 0)
+spread = 20.0
+initial_velocity_min = 60.0
+initial_velocity_max = 140.0
+gravity = Vector3(0, -80, 0)
+scale_min = 0.4
+scale_curve = SubResource("CurveTexture_veyfh")
+alpha_curve = SubResource("CurveTexture_ncjjg")
+
+[node name="LavaParticles" type="GPUParticles2D"]
+amount = 140
+texture = ExtResource("1_q5q1t")
+lifetime = 1.6
+visibility_rect = Rect2(-1200, -400, 2400, 1200)
+process_material = SubResource("ParticleProcessMaterial_ncjjg")

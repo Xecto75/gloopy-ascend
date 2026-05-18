@@ -1,7 +1,13 @@
-[gd_scene load_steps=4 format=3 uid="uid://xcn2y4ak0ck2"]
+[gd_scene load_steps=10 format=3 uid="uid://xcn2y4ak0ck2"]
 
 [ext_resource type="Script" uid="uid://dq8gl74otb2ij" path="res://componentsScripts/planet.gd" id="1_8tk3c"]
-[ext_resource type="Texture2D" uid="uid://cj22h7gkpotop" path="res://assets/images/img_planet.png" id="1_eu01p"]
+[ext_resource type="Texture2D" uid="uid://c1t6f5af0v7cs" path="res://assets/images/planet/planeta.png" id="2_021lp"]
+[ext_resource type="Texture2D" uid="uid://bp871601mv5p1" path="res://assets/images/planet/planetb.png" id="3_u8y40"]
+[ext_resource type="Texture2D" uid="uid://bwep7j8dehcjj" path="res://assets/images/planet/crack1.png" id="4_3d43y"]
+[ext_resource type="Texture2D" uid="uid://bd2mnsbilduxr" path="res://assets/images/planet/crack2b.png" id="5_54aps"]
+[ext_resource type="Texture2D" uid="uid://bnjoej31ueanl" path="res://assets/images/planet/crack2a.png" id="6_tv1et"]
+[ext_resource type="Texture2D" uid="uid://dqc43in1ecwhj" path="res://assets/images/planet/crack3b.png" id="7_3ixpd"]
+[ext_resource type="Texture2D" uid="uid://boxrq3k7geemk" path="res://assets/images/planet/crack3a.png" id="8_tehxe"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_8tk3c"]
 
@@ -10,8 +16,28 @@ process_mode = 1
 collision_layer = 2
 script = ExtResource("1_8tk3c")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("1_eu01p")
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_8tk3c")
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="PlanetDeep" type="Sprite2D" parent="Visual"]
+texture = ExtResource("2_021lp")
+
+[node name="PlanetSurface" type="Sprite2D" parent="Visual"]
+texture = ExtResource("3_u8y40")
+
+[node name="Crack1" type="Sprite2D" parent="Visual"]
+texture = ExtResource("4_3d43y")
+
+[node name="Crack2Deep" type="Sprite2D" parent="Visual"]
+texture = ExtResource("5_54aps")
+
+[node name="Crack2Surface" type="Sprite2D" parent="Visual"]
+texture = ExtResource("6_tv1et")
+
+[node name="Crack3Deep" type="Sprite2D" parent="Visual"]
+texture = ExtResource("7_3ixpd")
+
+[node name="Crack3Surface" type="Sprite2D" parent="Visual"]
+texture = ExtResource("8_tehxe")

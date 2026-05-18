@@ -26,17 +26,12 @@ class AndroidExportPlugin extends EditorExportPlugin:
 		return false
 
 	func _get_android_libraries(platform, debug):
-		if debug:
-			return PackedStringArray([_plugin_name + "/bin/debug/" + _plugin_name + "-debug.aar"])
-		else:
-			return PackedStringArray([_plugin_name + "/bin/release/" + _plugin_name + "-release.aar"])
+		return PackedStringArray(["AppsFlyerPlugin/AppsFlyerPlugin-release.aar"])
 
 	func _get_android_dependencies(platform, debug):
-		# TODO: Add remote dependices here.
-		if debug:
-			return PackedStringArray([])
-		else:
-			return PackedStringArray([])
+		return PackedStringArray([
+			"com.appsflyer:af-android-sdk:6.13.1"
+		])
 
 	func _get_name():
 		return _plugin_name

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cdddvnfyj8060"]
+
+[ext_resource type="Script" uid="uid://bqhiwdrruoesx" path="res://uiScripts/radial_timer.gd" id="1_7chy8"]
+
+[node name="RadialTimer" type="Node2D"]
+script = ExtResource("1_7chy8")

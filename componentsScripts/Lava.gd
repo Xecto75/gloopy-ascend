@@ -6,9 +6,6 @@ extends Node2D
 @export var fireball_scene: PackedScene
 @export var warning_scene: PackedScene
 
-@export var min_rise_speed := 100.0
-@export var max_rise_speed := 1000.0
-
 const FIREBALL_WARNING_DISTANCE := 1400.0
 const WARNING_Y := 1800.0
 
@@ -17,12 +14,13 @@ const WARNING_Y := 1800.0
 
 @export var scroll_speed := 200.0
 
-@onready var sprite1: Sprite2D = $Visual/Sprite2D
-@onready var sprite2: Sprite2D = $Visual/Sprite2D2
-@onready var sprite3: Sprite2D = $Visual/Sprite2D3
+@onready var sprite1: AnimatedSprite2D = $Visual/Lava1
+@onready var sprite2: AnimatedSprite2D = $Visual/Lava2
+@onready var sprite3: AnimatedSprite2D = $Visual/Lava3
 
 @onready var fireballs := $Fireballs
 @onready var warnings := $Warnings
+@onready var particles := $LavaParticles
 
 var debug_timer := 0.0
 var fireball_timer := 0.0
@@ -32,7 +30,7 @@ var active := false
 var texture_width := 0.0
 var texture_height := 0.0
 
-var start_y := 1500.0
+var start_y := 1900.0
 
 const TELEPORT_DISTANCE := 5000.0
 
@@ -47,8 +45,9 @@ const FIREBALL_MAX_CHANCE := 0.9
 
 func _ready() -> void:
 
-	texture_width = sprite1.texture.get_width() * sprite1.scale.x
-	texture_height = sprite1.texture.get_height() * sprite1.scale.y
+	texture_width = sprite1.sprite_frames.get_frame_texture("default", 0).get_width() * sprite1.scale.x
+
+	texture_height = sprite1.sprite_frames.get_frame_texture("default", 0).get_height() * sprite1.scale.y
 
 	# side by side
 	sprite1.position.x = -texture_width
@@ -60,10 +59,14 @@ func _ready() -> void:
 	sprite2.position.y = texture_height * 0.5
 	sprite3.position.y = texture_height * 0.5
 
+	sprite1.play("default")
+	sprite2.play("default")
+	sprite3.play("default")
+
 	global_position.y = start_y
-
-
+	
 func reset():
+	particles.restart()
 	for child in fireballs.get_children():
 		child.queue_free()
 
@@ -77,6 +80,8 @@ func reset():
 
 
 func _process(delta: float) -> void:
+	particles.global_position.x = camera.global_position.x
+	particles.global_position.y = global_position.y
 
 	if camera == null or player == null:
 		return
@@ -99,31 +104,26 @@ func _process(delta: float) -> void:
 
 	t = clamp(t, 0.0, 1.0)
 
-	var current_rise_speed: float = lerp(
-		min_rise_speed,
-		max_rise_speed,
-		t
-	)
 
 	if debug_timer >= 1.0:
 		debug_timer = 0.0
-		print("Lava speed: ", current_rise_speed)
+		#print("Lava speed: ", current_rise_speed)
 
 	# lava rises
-	global_position.y -= current_rise_speed * delta
+	var current_speed :float= lerp(
+		SaveData.LAVA_SPEED * 1.0,
+		SaveData.LAVA_SPEED * 8.0,
+			t
+)
 
-	# fake lava flow
-	sprite1.position.x += scroll_speed * delta
-	sprite2.position.x += scroll_speed * delta
-	sprite3.position.x += scroll_speed * delta
+	global_position.y -= current_speed * delta
 
 	# reposition around camera
 	_reposition_segment(sprite1)
 	_reposition_segment(sprite2)
 	_reposition_segment(sprite3)
 
-
-func _reposition_segment(sprite: Sprite2D) -> void:
+func _reposition_segment(sprite: AnimatedSprite2D) -> void:
 
 	var cam_left: float = camera.global_position.x - get_viewport_rect().size.x * 0.5
 	var cam_right: float = camera.global_position.x + get_viewport_rect().size.x * 0.5
@@ -150,8 +150,7 @@ func _reposition_segment(sprite: Sprite2D) -> void:
 		)
 
 		sprite.position.x = rightmost + texture_width
-
-
+		
 func _on_hitbox_body_entered(body: Node2D) -> void:
 
 	if body != player:

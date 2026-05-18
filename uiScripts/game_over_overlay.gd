@@ -8,6 +8,8 @@ extends Control
 @onready var top_offset: Control = $VBoxContainer/Spacer1
 @onready var bottom_offset: Control = $VBoxContainer/Spacer2
 
+var current_level: int = 1
+
 signal revive
 signal overlay_close
 signal open_settings
@@ -35,8 +37,8 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	visible = false
 
-
 func show_overlay() -> void:
+	SaveData.revive_used = false
 	visible = true
 
 	# fade in GAME OVER
@@ -49,7 +51,6 @@ func show_overlay() -> void:
 	await get_tree().create_timer(0.6).timeout
 	_start_tap_pulse()
 
-
 func hide_overlay() -> void:
 	visible = false
 	tap_label.modulate.a = 1.0
@@ -59,21 +60,21 @@ func hide_overlay() -> void:
 func _on_settings_button_pressed() -> void:
 	emit_signal("open_settings")
 
-
-	
 func _on_score_updated(score: int) -> void:
-	if score > highscore:
+	current_level = SaveData.points_to_level(score)
+	
+	if current_level > highscore:
 		highscore_text.visible = false
-		highscore = score
+		highscore = current_level
 		score_text.add_theme_color_override("font_color", Color("FFE666"))
 		score_text.add_theme_color_override("font_shadow_color", Color("BFA200"))
-		score_text.text = ("New Best !\n" + str(score))
+		score_text.text = ("New Best !\nLevel " + str(current_level))
 		await get_tree().create_timer(0.1).timeout
 		_pop_highscore_text(score_text)
 	else:
 		highscore_text.visible = true
 		highscore_text.text = ("Best : " + str(highscore))
-		score_text.text = str(score)
+		score_text.text = ("Level " + str(current_level))
 		score_text.add_theme_color_override("font_color", Color("ffffff"))
 		score_text.add_theme_color_override("font_shadow_color", Color("828282"))
 		await get_tree().create_timer(0.1).timeout
@@ -107,10 +108,11 @@ func _fade_in_label(label: Label, duration: float = 0.35) -> void:
 
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and not event.pressed:
-		emit_signal("revive")
+		emit_signal("revive", false)
 
 
 func _pop_highscore_text(textLabel: Label) -> void:
+	print("pop anim called")
 	textLabel.visible = true
 	textLabel.modulate = Color(1, 1, 1, 0.0)
 

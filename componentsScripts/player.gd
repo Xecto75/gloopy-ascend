@@ -12,6 +12,8 @@ extends CharacterBody2D
 ]
 @export var pause_button: Control
 
+@onready var particles := $SlimeParticules
+
 
 var dead:= false
 @onready var sprite: AnimatedSprite2D = $Sprite2D
@@ -86,6 +88,8 @@ var has_launched := false
 var spawn_immunity_timer := 0.0
 var fall_fail_timer := 0.0
 var is_landing := false
+
+var last_safe_position := Vector2(590, 1380)
 
 # --- ROCK CONTACT STATE (NEW) ---
 var touching_rock := false
@@ -276,11 +280,15 @@ func _on_rock_entered() -> void:
 
 	rock_local_offset = stuck_rock.to_local(global_position)
 
+	var collision = get_slide_collision(get_slide_collision_count() - 1)
+	var landing_normal := collision.get_normal()
+
 	is_landing = true
 	sprite.flip_v = true
+	_play_slime_landing_particles(landing_normal)
 	sprite.play("landing")
 	_play_random_landing_sfx()
-
+	
 func _on_rock_exited() -> void:
 	is_landing = false
 
@@ -289,13 +297,14 @@ func _on_rock_exited() -> void:
 # =========================================================
 func _force_stick_to_planet(planet: Node2D) -> void:
 	_evaluate_jump_bonus()
-	# --- IMPACT SHAKE ---
+
 	if air_time >= AIRTIME_SHAKE_THRESHOLD:
 		var t :float= clamp(
 			(air_time - AIRTIME_SHAKE_THRESHOLD) / 1.5,
 			0.0,
 			1.0
 		)
+
 		_shake_camera(lerp(4.0, MAX_SHAKE_STRENGTH, t))
 
 	air_time = 0.0
@@ -303,26 +312,36 @@ func _force_stick_to_planet(planet: Node2D) -> void:
 	stuck = true
 	velocity = Vector2.ZERO
 	stuck_planet = planet
+	last_safe_position = global_position
 
 	var planet_col := planet.get_node("CollisionShape2D") as CollisionShape2D
 	var planet_r := _get_planet_radius(planet_col)
 	var player_r := _get_player_radius(player_col)
 
 	var dir := (global_position - planet.global_position).normalized()
+
 	if dir.length_squared() < 0.0001:
 		dir = Vector2.UP
 
-	global_position = planet.global_position + dir * (planet_r + player_r + SURFACE_OFFSET)
+	global_position = planet.global_position + dir * (
+		planet_r + player_r + SURFACE_OFFSET
+	)
+
 	local_offset = planet.to_local(global_position)
 
 	_update_orientation_on_planet()
+
 	is_landing = true
+
+	_play_slime_landing_particles(dir)
+
 	sprite.play("landing")
+
 	_play_random_landing_sfx()
 
 	if planet.has_method("on_player_stick"):
 		planet.on_player_stick()
-
+		
 func _follow_planet() -> void:
 	if stuck_planet == null:
 		stuck = false
@@ -352,8 +371,8 @@ func _press_started_on_ui(pos: Vector2) -> bool:
 	return false
 	
 func _start_drag() -> void:
-	if not stuck and not rock_stuck:
-		return
+	#if not stuck and not rock_stuck:
+	#	return
 
 	dragging = true
 	drag_origin_screen = get_viewport().get_mouse_position()
@@ -390,8 +409,8 @@ func _end_drag() -> void:
 	dragging = false
 	aim_preview.hide_preview()
 	#dont fly
-	if not stuck and not rock_stuck:
-		return
+	#if not stuck and not rock_stuck:
+	#	return
 
 	if rock_stuck:
 		rock_stuck = false
@@ -484,7 +503,12 @@ func _on_revive(spawn_pos: Vector2) -> void:
 
 	rotation = 0.0
 	sprite.play("idle")
-	sprite.flip_v = true
+	if rock_stuck:
+		print("rock stuck")
+		sprite.flip_v = true
+	else:
+		print("rock pas stuck")
+		sprite.flip_v = false
 
 # =========================================================
 # UTIL
@@ -547,6 +571,20 @@ func _play_random_landing_sfx() -> void:
 	var i := randi() % land_sfx.size()
 	land_sfx[i].play()
 	
+func _play_slime_landing_particles(landing_normal: Vector2) -> void:
+	if spawn_immunity_timer > 0.0:
+		return
+	#print("landing angle = ", landing_normal.angle())
+	particles.restart()
+
+	var impact_offset := 75.0
+
+	particles.global_position = (
+		global_position - landing_normal * impact_offset
+	)
+
+	particles.rotation = abs(landing_normal.angle())
+
 func _shake_camera(strength: float) -> void:
 	var timer := 0.0
 

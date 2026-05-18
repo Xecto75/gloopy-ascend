@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://cxs5wa44yuikl"]
+[gd_scene load_steps=30 format=3 uid="uid://cxs5wa44yuikl"]
 
 [ext_resource type="Script" uid="uid://cgt1lwil75d14" path="res://mainScripts/CloudsGen.gd" id="1_bggie"]
 [ext_resource type="Script" uid="uid://dylf35miitnse" path="res://mainScripts/main.gd" id="1_ei0ll"]
@@ -23,6 +23,7 @@
 [ext_resource type="Texture2D" uid="uid://dejb52esh17l8" path="res://assets/images/Clound_3.png" id="15_dm346"]
 [ext_resource type="Script" uid="uid://db8hhpl5hti1f" path="res://mainScripts/ground.gd" id="16_dm346"]
 [ext_resource type="Texture2D" uid="uid://bfkhbmkoo1jd6" path="res://assets/icons/icon_pause.png" id="19_7kjiq"]
+[ext_resource type="PackedScene" uid="uid://feccj26d26dk" path="res://uiScenes/RevivePopUp.tscn" id="19_ylq0x"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_x5oen"]
 size = Vector2(231, 37)
@@ -53,11 +54,10 @@ position = Vector2(592, 886)
 texture = ExtResource("3_7kjiq")
 
 [node name="BackgroundTexture" type="TextureRect" parent="World"]
-offset_left = -530.0
-offset_top = -896.0
-offset_right = 1654.0
-offset_bottom = 2716.0
-mouse_filter = 2
+offset_left = -532.0
+offset_top = -891.0
+offset_right = 1652.0
+offset_bottom = 2721.0
 texture = ExtResource("3_1qxlk")
 
 [node name="EscapeText" type="Sprite2D" parent="World"]
@@ -90,10 +90,10 @@ shape = SubResource("RectangleShape2D_x5oen")
 [node name="GroundColor" type="ColorRect" parent="World"]
 z_index = -1
 custom_minimum_size = Vector2(30000, 3000)
-offset_left = -14000.0
-offset_top = 1419.0
-offset_right = 16000.0
-offset_bottom = 4419.0
+offset_left = -14158.0
+offset_top = 1425.0
+offset_right = 15842.0
+offset_bottom = 4425.0
 color = Color(0.321569, 0.717647, 0.435294, 1)
 
 [node name="Ground" type="Area2D" parent="World" groups=["kill_zone"]]
@@ -164,6 +164,9 @@ offset_bottom = 244.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
+
+[node name="RevivePopUp" parent="UI" instance=ExtResource("19_ylq0x")]
+visible = false
 
 [node name="PausePopUp" parent="UI" instance=ExtResource("5_gnaye")]
 visible = false

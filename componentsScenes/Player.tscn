@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=3 uid="uid://0tqq6o2e1rnc"]
+[gd_scene load_steps=47 format=3 uid="uid://0tqq6o2e1rnc"]
 
 [ext_resource type="Script" uid="uid://dxsmq8h27n8ov" path="res://componentsScripts/player.gd" id="1_3wjlt"]
 [ext_resource type="Texture2D" uid="uid://dlko1ibiqy3rt" path="res://assets/animations/anim_charge.png" id="2_7fmpi"]
@@ -12,6 +12,7 @@
 [ext_resource type="AudioStream" uid="uid://bjssrrk61ynkx" path="res://assets/se/landing_2.mp3" id="10_b6yr8"]
 [ext_resource type="AudioStream" uid="uid://dr7hsaftbswaq" path="res://assets/se/landing_3.mp3" id="11_lskae"]
 [ext_resource type="AudioStream" uid="uid://c54gjcd840nfq" path="res://assets/se/fail.mp3" id="12_eseq4"]
+[ext_resource type="PackedScene" uid="uid://c5vyi4ukq5cvr" path="res://assets/styles/SlimeParticules.tscn" id="13_b6yr8"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_eseq4"]
 atlas = ExtResource("2_7fmpi")
@@ -273,7 +274,7 @@ animation = &"landing"
 [node name="Camera2D" type="Camera2D" parent="Sprite2D"]
 process_priority = 10
 offset = Vector2(0, -500)
-zoom = Vector2(0.8, 0.8)
+zoom = Vector2(0.4, 0.4)
 position_smoothing_enabled = true
 position_smoothing_speed = 8.0
 
@@ -317,5 +318,7 @@ stream = ExtResource("12_eseq4")
 volume_db = 2.0
 attenuation = 1.51572
 bus = &"SFX"
+
+[node name="SlimeParticules" parent="." instance=ExtResource("13_b6yr8")]
 
 [connection signal="animation_finished" from="Sprite2D" to="." method="_on_sprite_2d_animation_finished"]

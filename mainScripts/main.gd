@@ -8,7 +8,7 @@ var score_tween: Tween
 @onready var home_slime: Sprite2D = $World/HomeSlime
 @onready var home_escape: Sprite2D = $World/EscapeText
 @onready var lava = $World/Lava
-
+var current_level: int
 @onready var bgm: AudioStreamPlayer = $BGM
 @onready var player: Node = $World/Player
 
@@ -19,10 +19,11 @@ var score_tween: Tween
 @onready var game_over_overlay = $UI/GameOverOverlay
 @onready var gameplay_overlay = $UI/GameplayDarkOverlay
 @onready var popup_overlay = $UI/PopupDarkOverlay
+@onready var revive_popup = $UI/RevivePopUp
+
 
 @onready var score_label: Label = $UI/ScoreLabel
 @onready var bonus_label: Label = $UI/BonusLabel
-
 
 var skip_next_overlay_click := false
 
@@ -41,16 +42,7 @@ enum GameState {
 var game_state: GameState = GameState.HOME
 
 func _ready() -> void:
-	print("AF_PLUGIN_CHECK: ", Engine.has_singleton("AppsFlyerPlugin"))
-	if OS.get_name() == "Android":
-		if Engine.has_singleton("AppsFlyerPlugin"):
-			var af = Engine.get_singleton("AppsFlyerPlugin")
-			
-			af.init(
-				"izwPVApAiRH3tMcrZvWkU", 
-				"com.xecto.slimejumper"
-			)
-			
+	SaveData.highscore = 1
 	var safe_area: Rect2 = DisplayServer.get_display_safe_area()
 	var screen_size: Vector2i = DisplayServer.window_get_size()
 	
@@ -91,9 +83,14 @@ func _ready() -> void:
 	pause_popup.overlay_close.connect(_refresh_ui)
 	settings_popup.overlay_close.connect(_refresh_ui)
 	game_over_overlay.overlay_close.connect(_refresh_ui)
-	game_over_overlay.revive.connect(_on_revive_player)
-
 	home_overlay.overlay_close.connect(_refresh_ui)
+	
+	revive_popup.revive_denied.connect(_revive_denied)
+	
+	game_over_overlay.revive.connect(_on_revive_player)
+	revive_popup.revive_pressed.connect(_on_revive_player)
+	revive_popup.revive_pressed.connect(_refresh_ui.unbind(1))
+	revive_popup.revive_denied.connect(_refresh_ui)
 	
 	home_overlay.start_game.connect(_on_home_start_game)
 	score_update.connect(game_over_overlay._on_score_updated)
@@ -146,35 +143,65 @@ func _on_player_height_updated(height: float) -> void:
 	if height + 1600 <= max_height:
 		return
 	max_height = height + 1600
-	score = int((max_height-210) * SCORE_SCALE)
-	score_label.text = str(score)
+	score = int(max_height - 210)
+	if height < -1380:
+		return
+	if current_level != SaveData.points_to_level(score) :
+		print("POP ANIM, LEVEL :", current_level)
+		_animate_score_punch()
+		current_level = SaveData.points_to_level(score)
+		SaveData.update_difficulty(current_level)
+	score_label.text = "LEVEL " + str(current_level)
 	
 func _on_player_died() -> void:
 	_vibrate(120)
-	score_update.emit(score)
-	score = 0
-	max_height = 0
-	score_label.text = ""
-	AdsManager.on_player_death()
-	_show_game_over()
+	if SaveData.revive_used:
+		score = 0
+		max_height = 0
+		score_update.emit(score)
+		_show_game_over()
+		return
+	SaveData.revive_used = true
+	_show_revive()
+		
 
-func _on_revive_player() -> void:
-	print("STATE → PLAYING (revive)")
+func _on_revive_player(reward_ad: bool) -> void:
+	#print("STATE → PLAYING (revive)")
+	print("last safe position: ", player.last_safe_position)
 	game_state = GameState.PLAYING
 
-	var gen = $World/WorldGenerator
-	gen.reset()
-	gen.start_generation()
+	if not reward_ad:
+		var gen = $World/WorldGenerator
+		gen.reset()
+		gen.start_generation()
 
-	player._on_revive(SPAWN_POS)
+	var screen_height = get_viewport().get_visible_rect().size.y
+
+	$World/Lava.global_position.y = (
+		player.last_safe_position.y + screen_height * 2.5
+	)
+
+	player._on_revive(player.last_safe_position)
 	
-	print("MOVE LAVA")
 	$World/Lava.reset()
 	$World/Lava.active = true
 
 	_hide_all_ui()
 	_refresh_ui()
 
+func _show_revive() -> void:
+	game_state = GameState.PAUSED
+	#print("STATE → GAME PAUSED")
+	_hide_all_ui()
+	
+	revive_popup.show_overlay()
+	_refresh_ui()
+	_fade_in_overlay()
+	
+func _revive_denied() -> void:
+	score_update.emit(score)
+	_show_game_over()
+	
 # --------------------------
 # UI OPENERS
 # --------------------------
@@ -187,14 +214,14 @@ func _show_settings() -> void:
 	_fade_in_overlay()
 
 func _show_pause():
-	if game_state == GameState.GAME_OVER:
+	if game_state == GameState.GAME_OVER or revive_popup.visible == true:
 		print("SHOW_PAUSE BLOCKED — game over active")
 		return
 
 	if pause_popup.visible:
 		return
 
-	print("STATE → PAUSED")
+	#print("STATE → PAUSED")
 	game_state = GameState.PAUSED
 
 	pause_popup.show_popup()
@@ -203,7 +230,7 @@ func _show_pause():
 
 
 func _show_home() -> void:
-	print("STATE → HOME")
+	#print("STATE → HOME")
 	$World/Lava.active = false
 	game_state = GameState.HOME
 	
@@ -214,11 +241,14 @@ func _show_home() -> void:
 	_fade_in_overlay()
 
 func _show_game_over():
-	print("STATE → GAME_OVER")
+	#print("STATE → GAME_OVER")
+	score_label.text = ""
 	game_state = GameState.GAME_OVER   # ← CRITICAL LINE
-
+	AdsManager.on_player_death()
+	player.last_safe_position = SPAWN_POS
+	SaveData.reset_difficulty()
+	
 	_hide_all_ui()
-
 	game_over_overlay.show_overlay()
 
 
@@ -245,7 +275,7 @@ func _refresh_ui() -> void:
 	# --------------------------
 	# POPUP DARK OVERLAY (Pause OR Settings)
 	# --------------------------
-	var popup_active: bool = pause_popup.visible or settings_popup.visible
+	var popup_active: bool = pause_popup.visible or settings_popup.visible or revive_popup.visible
 
 	popup_overlay.visible = popup_active
 	popup_overlay.mouse_filter = Control.MOUSE_FILTER_STOP if popup_active else Control.MOUSE_FILTER_IGNORE
@@ -263,14 +293,15 @@ func _refresh_ui() -> void:
 		pause_popup.visible
 		or settings_popup.visible
 		or game_over_overlay.visible
+		or revive_popup.visible
 	)
 
 	if should_pause and not get_tree().paused:
-		print("TREE PAUSE → TRUE")
+		#print("TREE PAUSE → TRUE")
 		get_tree().paused = true
 
 	elif not should_pause and get_tree().paused:
-		print("TREE PAUSE → FALSE")
+		#print("TREE PAUSE → FALSE")
 		get_tree().paused = false
 
 
@@ -314,13 +345,12 @@ func _close_topmost_ui() -> void:
 
 	if game_over_overlay.visible:
 		game_over_overlay.visible = false
-		_on_revive_player()
+		_on_revive_player(false)
 		return
 
 #func _input(event):
 #	if game_state == GameState.HOME and event is InputEventScreenTouch and event.pressed:
 #		_on_home_start_game()
-
 
 
 func _on_overlay_gui_input(event: InputEvent) -> void:
@@ -354,24 +384,20 @@ func _update_pause_button_visibility() -> void:
 
 	pause_button.visible = gameplay_or_paused and not game_blocked
 
-
-
 	
 func _bonus_score_updated(bonus_type: String) -> void:
 	match bonus_type:
 		"big_jump":
-			score += 50
-			_show_bonus_popup("BIG MOVE!\n+50")
+			_show_bonus_popup("BIG MOVE!")
 			_vibrate(45)
 		"perfect_jump":
-			score += 100
-			_show_bonus_popup("PERFECT JUMP!\n +100")
+			_show_bonus_popup("PERFECT JUMP!")
 			_vibrate(45)
 			await get_tree().create_timer(0.08).timeout
 			_vibrate(45)
 
-	score_label.text = str(score)
-	_animate_score_punch()
+	#score_label.text = "LEVEL " + str(SaveData.points_to_level(score))
+	#_animate_score_punch()
 
 func _animate_score_punch() -> void:
 	score_label.scale = Vector2.ONE
@@ -383,7 +409,7 @@ func _animate_score_punch() -> void:
 	tween.tween_property(
 		score_label,
 		"scale",
-		Vector2(1.40, 1.40),
+		Vector2(1.5, 1.5),
 		0.2
 	)
 	tween.tween_property(
@@ -394,6 +420,7 @@ func _animate_score_punch() -> void:
 	)
 	
 func _show_bonus_popup(text: String) -> void:
+	
 	bonus_label.text = text
 	bonus_label.visible = true
 	bonus_label.modulate.a = 1.0

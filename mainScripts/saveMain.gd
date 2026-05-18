@@ -104,8 +104,6 @@ func _process(_delta: float) -> void:
 
 	_update_pause_button_visibility()
 
-
-
 # --------------------------
 # SCORE
 # --------------------------
@@ -114,7 +112,7 @@ func _on_player_height_updated(height: float) -> void:
 		return
 	max_height = height + 1600
 	score = int((max_height-210) * SCORE_SCALE)
-	score_label.text = str(score)
+	score_label.text = "LEVEL " + str(SaveData.points_to_level(score))
 	
 func _on_player_died() -> void:
 	_vibrate(120)
@@ -289,7 +287,7 @@ func _bonus_score_updated(bonus_type: String) -> void:
 			await get_tree().create_timer(0.08).timeout
 			_vibrate(30)
 
-	score_label.text = str(score)
+	score_label.text = "LEVEL " + str(SaveData.points_to_level(score))
 	_animate_score_punch()
 
 func _animate_score_punch() -> void:

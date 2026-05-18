@@ -1,0 +1,6 @@
+[config]
+name="AppsFlyerPlugin"
+binary_type="local"
+
+[dependencies]
+local=["AppsFlyerPlugin-release.aar"]
