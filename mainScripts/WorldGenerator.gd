@@ -99,10 +99,10 @@ func _generate_next_anchor() -> void:
 	anchor_planets.append(planet)
 	highest_anchor_y = pos.y
 	
-	_draw_connection_line(
-		last_anchor.global_position,
-		planet.global_position
-	)
+	#_draw_connection_line(
+	#	last_anchor.global_position,
+	#	planet.global_position
+	#)
 
 	_generate_side_planets(planet)
 

@@ -8,9 +8,9 @@
 [ext_resource type="PackedScene" uid="uid://ccp40dc3dmiqf" path="res://uiScenes/GameOverOverlay.tscn" id="3_x5oen"]
 [ext_resource type="PackedScene" uid="uid://xcn2y4ak0ck2" path="res://componentsScenes/Planet.tscn" id="4_4iqkd"]
 [ext_resource type="Texture2D" uid="uid://b0632grp6raya" path="res://assets/images/title.png" id="4_26jha"]
-[ext_resource type="Texture2D" uid="uid://cinn4ve6w4mdc" path="res://assets/images/escape.png" id="4_72dpm"]
 [ext_resource type="PackedScene" uid="uid://r7qlpaykpmib" path="res://componentsScenes/Lava.tscn" id="4_g4qva"]
 [ext_resource type="PackedScene" uid="uid://0tqq6o2e1rnc" path="res://componentsScenes/Player.tscn" id="5_4iqkd"]
+[ext_resource type="Texture2D" uid="uid://bj78k4qjlyvhb" path="res://assets/images/img_escape_title.png" id="5_7kjiq"]
 [ext_resource type="Texture2D" uid="uid://b7olodqd3mb4e" path="res://assets/images/Background_1.png" id="5_72dpm"]
 [ext_resource type="PackedScene" uid="uid://b6lntv0lqus47" path="res://uiScenes/PausePopUp.tscn" id="5_gnaye"]
 [ext_resource type="PackedScene" uid="uid://b6i4jsfq13d08" path="res://componentsScenes/SkyBackground.tscn" id="6_ei0ll"]
@@ -44,30 +44,17 @@ camera = NodePath("World/Player/Sprite2D/Camera2D")
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 layer = -1
-scroll_ignore_camera_zoom = true
-
-[node name="Slime" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_scale = Vector2(0, 0.2)
-
-[node name="HomeSlime" type="Sprite2D" parent="ParallaxBackground/Slime"]
-position = Vector2(520, 910)
-texture = ExtResource("4_26jha")
 
 [node name="Volcano" type="ParallaxLayer" parent="ParallaxBackground"]
 motion_scale = Vector2(0, 0.2)
+motion_offset = Vector2(0, 200)
 
-[node name="Volcano" type="Sprite2D" parent="ParallaxBackground/Volcano"]
-position = Vector2(520, 910)
+[node name="TextureRect" type="TextureRect" parent="ParallaxBackground/Volcano"]
+offset_left = -531.0
+offset_top = -892.0
+offset_right = 1653.0
+offset_bottom = 2720.0
 texture = ExtResource("2_ylq0x")
-
-[node name="Title" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_scale = Vector2(0, 0.2)
-
-[node name="Title" type="Sprite2D" parent="ParallaxBackground/Title"]
-position = Vector2(520, 910)
-texture = ExtResource("4_72dpm")
-
-[node name="Clounds" type="ParallaxLayer" parent="ParallaxBackground"]
 
 [node name="BGM" type="AudioStreamPlayer" parent="."]
 process_mode = 1
@@ -77,27 +64,30 @@ parameters/looping = true
 
 [node name="World" type="Node2D" parent="."]
 
+[node name="HomeSlime" type="Sprite2D" parent="World"]
+position = Vector2(581, 867)
+texture = ExtResource("4_26jha")
+
 [node name="TextureRect" type="TextureRect" parent="World"]
 offset_left = -531.0
-offset_top = 1280.0
+offset_top = 1284.0
 offset_right = 1653.0
-offset_bottom = 2716.0
+offset_bottom = 2720.0
 texture = ExtResource("5_72dpm")
+
+[node name="EscapeText" type="Sprite2D" parent="World"]
+position = Vector2(588, 1035)
+texture = ExtResource("5_7kjiq")
 
 [node name="GroundColor" type="ColorRect" parent="World"]
 z_index = -1
 z_as_relative = false
 custom_minimum_size = Vector2(30000, 3000)
 offset_left = -14158.0
-offset_top = 1419.0
+offset_top = 1425.0
 offset_right = 15842.0
-offset_bottom = 4419.0
+offset_bottom = 4425.0
 color = Color(0.321569, 0.717647, 0.435294, 1)
-
-[node name="CloudsGen" type="Node2D" parent="World" node_paths=PackedStringArray("player")]
-script = ExtResource("1_bggie")
-player = NodePath("../Player")
-cloud_textures = Array[Texture2D]([ExtResource("13_cggtk"), ExtResource("14_p11mo"), ExtResource("15_dm346")])
 
 [node name="SkyBackground" parent="World" node_paths=PackedStringArray("camera", "player", "stars") instance=ExtResource("6_ei0ll")]
 layer = -10
@@ -123,6 +113,7 @@ position = Vector2(598, 1460)
 shape = SubResource("RectangleShape2D_x5oen")
 
 [node name="Ground" type="Area2D" parent="World" groups=["kill_zone"]]
+visible = false
 collision_layer = 4
 script = ExtResource("16_dm346")
 
@@ -135,13 +126,18 @@ script = ExtResource("3_gmlja")
 planet_scene = ExtResource("4_4iqkd")
 player = NodePath("../Player")
 
+[node name="CloudsGen" type="Node2D" parent="World" node_paths=PackedStringArray("player")]
+script = ExtResource("1_bggie")
+player = NodePath("../Player")
+cloud_textures = Array[Texture2D]([ExtResource("13_cggtk"), ExtResource("14_p11mo"), ExtResource("15_dm346")])
+
 [node name="Lava" parent="World" node_paths=PackedStringArray("camera", "player") instance=ExtResource("4_g4qva")]
 camera = NodePath("../Player/Sprite2D/Camera2D")
 player = NodePath("../Player")
 
 [node name="Player" parent="World" node_paths=PackedStringArray("pause_button") instance=ExtResource("5_4iqkd")]
 z_index = 10
-position = Vector2(590, 1389)
+position = Vector2(590, 1380)
 pause_button = NodePath("../../UI/PauseButton")
 
 [node name="UI" type="CanvasLayer" parent="."]

@@ -51,6 +51,14 @@ script = ExtResource("1_187rg")
 fireball_scene = ExtResource("4_nxqf3")
 warning_scene = ExtResource("3_ttuqm")
 
+[node name="BackFill" type="ColorRect" parent="."]
+offset_left = -81935.0
+offset_top = 273.0
+offset_right = 65026.0
+offset_bottom = 17479.0
+size_flags_horizontal = 3
+color = Color(0.662745, 0.313726, 0.160784, 1)
+
 [node name="Warnings" type="CanvasLayer" parent="."]
 
 [node name="Fireballs" type="Node2D" parent="."]

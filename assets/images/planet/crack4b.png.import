@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://tkvyuhmopap6"
-path="res://.godot/imported/img_gloopy_title.png-b71ca6a9cd8ca5d4a63f24955f16d845.ctex"
+uid="uid://chjsiqibjyer7"
+path="res://.godot/imported/crack4b.png-6fa4fc497fed3e8d2c9289aa84e5b1ff.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/img_gloopy_title.png"
-dest_files=["res://.godot/imported/img_gloopy_title.png-b71ca6a9cd8ca5d4a63f24955f16d845.ctex"]
+source_file="res://assets/images/planet/crack4b.png"
+dest_files=["res://.godot/imported/crack4b.png-6fa4fc497fed3e8d2c9289aa84e5b1ff.ctex"]
 
 [params]
 

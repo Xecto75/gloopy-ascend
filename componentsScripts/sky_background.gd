@@ -6,32 +6,44 @@ extends CanvasLayer
 
 @onready var rect: ColorRect = $ColorRect
 
-const STARS_START_Y := -65000.0
-const STARS_FULL_Y := -75000.0
+var STARS_START_Y := 0.0
+var STARS_FULL_Y := 0.0
+
+var h := SaveData.HEIGHT_PER_LEVEL
 
 # ==================================================
 # SKY COLOR
 # ==================================================
-const SKY_STEPS := [
-	{ "y":  3000.0,  "color": Color("#7fdbe6") },
-	{ "y":  0.0,     "color": Color("#6fc7db") },
-	{ "y": -6000.0,  "color": Color("#5fbcd3") },
-	{ "y": -15000.0, "color": Color("#3b8fbf") },
-	{ "y": -27000.0, "color": Color("#2a6f9e") },
-	{ "y": -42000.0, "color": Color("#1f4e79") },
-	{ "y": -60000.0, "color": Color("#0b1d2a") },
-	{ "y": -81000.0, "color": Color.BLACK }
-]
+var SKY_STEPS := []
 
 const FADE_SPEED := 1.2
 
 # ==================================================
 # READY
 # ==================================================
+
 func _ready() -> void:
-	
 	randomize()
 
+	var h := SaveData.HEIGHT_PER_LEVEL
+	
+	STARS_START_Y = -SaveData.HEIGHT_PER_LEVEL * 175
+	STARS_FULL_Y = -SaveData.HEIGHT_PER_LEVEL * 200
+
+	SKY_STEPS = [
+		{ "y":  h * 6,    "color": Color("#7fdbe6") },
+		{ "y":  0.0,      "color": Color("#6fc7db") },
+
+		{ "y": -h * 25,   "color": Color("#5fbcd3") },
+		{ "y": -h * 50,   "color": Color("#4ca8c7") },
+		{ "y": -h * 75,   "color": Color("#3b8fbf") },
+		{ "y": -h * 100,  "color": Color("#2f78ad") },
+		{ "y": -h * 125,  "color": Color("#245f96") },
+		{ "y": -h * 150,  "color": Color("#1b4a78") },
+
+		{ "y": -h * 175,  "color": Color("#123558") },
+		{ "y": -h * 200,  "color": Color.BLACK }
+	]
 # ==================================================
 # PROCESS
 # ==================================================

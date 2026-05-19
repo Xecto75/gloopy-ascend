@@ -61,6 +61,7 @@ func _on_settings_button_pressed() -> void:
 	emit_signal("open_settings")
 
 func _on_score_updated(score: int) -> void:
+	print("score = ", score)
 	current_level = SaveData.points_to_level(score)
 	
 	if current_level > highscore:
@@ -112,7 +113,7 @@ func _gui_input(event: InputEvent) -> void:
 
 
 func _pop_highscore_text(textLabel: Label) -> void:
-	print("pop anim called")
+	#print("pop anim called")
 	textLabel.visible = true
 	textLabel.modulate = Color(1, 1, 1, 0.0)
 

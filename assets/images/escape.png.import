@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bxheuqw4af5xr"
-path="res://.godot/imported/img_background.png-57b88902544dcbc17d2b6276df097f65.ctex"
+uid="uid://cinn4ve6w4mdc"
+path="res://.godot/imported/escape.png-4b09dd490e7767a5fd45801d907e9981.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/img_background.png"
-dest_files=["res://.godot/imported/img_background.png-57b88902544dcbc17d2b6276df097f65.ctex"]
+source_file="res://assets/images/escape.png"
+dest_files=["res://.godot/imported/escape.png-4b09dd490e7767a5fd45801d907e9981.ctex"]
 
 [params]
 

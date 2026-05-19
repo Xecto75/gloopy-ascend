@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://xcn2y4ak0ck2"]
+[gd_scene load_steps=12 format=3 uid="uid://xcn2y4ak0ck2"]
 
 [ext_resource type="Script" uid="uid://dq8gl74otb2ij" path="res://componentsScripts/planet.gd" id="1_8tk3c"]
 [ext_resource type="Texture2D" uid="uid://c1t6f5af0v7cs" path="res://assets/images/planet/planeta.png" id="2_021lp"]
@@ -8,6 +8,8 @@
 [ext_resource type="Texture2D" uid="uid://bnjoej31ueanl" path="res://assets/images/planet/crack2a.png" id="6_tv1et"]
 [ext_resource type="Texture2D" uid="uid://dqc43in1ecwhj" path="res://assets/images/planet/crack3b.png" id="7_3ixpd"]
 [ext_resource type="Texture2D" uid="uid://boxrq3k7geemk" path="res://assets/images/planet/crack3a.png" id="8_tehxe"]
+[ext_resource type="Texture2D" uid="uid://chjsiqibjyer7" path="res://assets/images/planet/crack4b.png" id="9_3d43y"]
+[ext_resource type="Texture2D" uid="uid://l04cgd4ho6pg" path="res://assets/images/planet/crack4a.png" id="10_54aps"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_8tk3c"]
 
@@ -41,3 +43,9 @@ texture = ExtResource("7_3ixpd")
 
 [node name="Crack3Surface" type="Sprite2D" parent="Visual"]
 texture = ExtResource("8_tehxe")
+
+[node name="Crack4Deep" type="Sprite2D" parent="Visual"]
+texture = ExtResource("9_3d43y")
+
+[node name="Crack4Surface" type="Sprite2D" parent="Visual"]
+texture = ExtResource("10_54aps")

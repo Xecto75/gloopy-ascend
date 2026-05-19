@@ -488,6 +488,7 @@ func _on_revive(spawn_pos: Vector2) -> void:
 	global_position = spawn_pos
 	velocity = Vector2.ZERO
 	set_physics_process(true)
+	emit_signal("height_updated", -global_position.y)
 
 	stuck = false
 	stuck_planet = null

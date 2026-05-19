@@ -23,22 +23,22 @@ const CLOUD_X_SPREAD: float = 3000.0
 # --------------------------------------------------
 # ALTITUDE DENSITY
 # --------------------------------------------------
-const CLOUD_DENSITY_START_Y: float = -2000.0
-const CLOUD_DENSITY_END_Y: float = -60000.0
+var CLOUD_DENSITY_START_Y: float
+var CLOUD_DENSITY_END_Y: float
 
-const CLOUD_DENSITY_MULTIPLIER := 0.15
+const CLOUD_DENSITY_MULTIPLIER := 0.08
 
 # --------------------------------------------------
 # ALTITUDE FADE (NEW)
 # --------------------------------------------------
-const CLOUD_FADE_START_Y := -30000.0
-const CLOUD_FADE_END_Y   := -60000.0
+var CLOUD_FADE_START_Y : float 
+var CLOUD_FADE_END_Y : float
 
 # --------------------------------------------------
 # DRIFT
 # --------------------------------------------------
-const CLOUD_MIN_DRIFT_SPEED: float = 6.0
-const CLOUD_MAX_DRIFT_SPEED: float = 18.0
+const CLOUD_MIN_DRIFT_SPEED: float = 8.0
+const CLOUD_MAX_DRIFT_SPEED: float = 20.0
 
 # --------------------------------------------------
 # STATE
@@ -52,7 +52,14 @@ var last_spawn_y: float
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_PAUSABLE
-
+	var h := SaveData.HEIGHT_PER_LEVEL
+	
+	CLOUD_FADE_START_Y = -h * 160
+	CLOUD_FADE_END_Y = -h * 180
+	
+	CLOUD_DENSITY_START_Y = -h * 3
+	CLOUD_DENSITY_END_Y =  -h * 180
+	
 	clouds = []
 	cloud_drift_speed = []
 	cloud_drift_dir = []
@@ -91,15 +98,16 @@ func _process(delta: float) -> void:
 # --------------------------------------------------
 func _density_at_height(py: float) -> float:
 	if py >= CLOUD_DENSITY_START_Y:
-		return 1.0
-	if py <= CLOUD_DENSITY_END_Y:
 		return 0.0
+
+	if py <= CLOUD_DENSITY_END_Y:
+		return 1.0
+
 	return inverse_lerp(
 		CLOUD_DENSITY_END_Y,
 		CLOUD_DENSITY_START_Y,
 		py
 	)
-
 
 # --------------------------------------------------
 # OPACITY FADE (NEW)

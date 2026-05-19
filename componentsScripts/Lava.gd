@@ -9,7 +9,7 @@ extends Node2D
 const FIREBALL_WARNING_DISTANCE := 1400.0
 const WARNING_Y := 1800.0
 
-@export var target_distance := 900.0
+@export var target_distance := 800.0
 @export var max_distance := 3200.0
 
 @export var scroll_speed := 200.0
@@ -65,8 +65,9 @@ func _ready() -> void:
 
 	global_position.y = start_y
 	
-func reset():
+func reset(reset_position: bool = true):
 	particles.restart()
+
 	for child in fireballs.get_children():
 		child.queue_free()
 
@@ -75,9 +76,10 @@ func reset():
 
 	fireball_timer = 0.0
 
-	global_position.y = start_y
-	active = false
+	if reset_position:
+		global_position.y = start_y
 
+	active = false
 
 func _process(delta: float) -> void:
 	particles.global_position.x = camera.global_position.x
@@ -105,17 +107,23 @@ func _process(delta: float) -> void:
 	t = clamp(t, 0.0, 1.0)
 
 
-	if debug_timer >= 1.0:
-		debug_timer = 0.0
-		#print("Lava speed: ", current_rise_speed)
-
+	
 	# lava rises
 	var current_speed :float= lerp(
 		SaveData.LAVA_SPEED * 1.0,
 		SaveData.LAVA_SPEED * 8.0,
 			t
-)
+	)
+	
+	if debug_timer >= 1.0:
+		debug_timer = 0.0
 
+		print("========================================")
+		print("LAVA DISTANCE: ", distance)
+		print("LAVA SPEED: ", current_speed)
+		print("========================================")
+
+	
 	global_position.y -= current_speed * delta
 
 	# reposition around camera

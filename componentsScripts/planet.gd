@@ -15,6 +15,9 @@ extends StaticBody2D
 @onready var crack3_deep: Sprite2D = $Visual/Crack3Deep
 @onready var crack3_surface: Sprite2D = $Visual/Crack3Surface
 
+@onready var crack4_deep: Sprite2D = $Visual/Crack4Deep
+@onready var crack4_surface: Sprite2D = $Visual/Crack4Surface
+
 const BASE_RADIUS := 180.0
 const MIN_SPIN_SPEED: float = 0.5
 const MAX_SPIN_SPEED: float = 1.0
@@ -51,8 +54,8 @@ func setup_visuals(world_height: float) -> void:
 	var level := int(abs(world_height) / SaveData.HEIGHT_PER_LEVEL)
 	var visual_level := level + 1
 
-	var color_stage : float = clamp(visual_level / 20, 0, COLOR_SETS.size() - 2)
-	var crack_stage := int((visual_level % 20) / 5)
+	var color_stage : float = clamp(visual_level / 25, 0, COLOR_SETS.size() - 2)
+	var crack_stage := int((visual_level % 25) / 5)
 
 	var current_colors = COLOR_SETS[color_stage]
 	var next_colors = COLOR_SETS[color_stage + 1]
@@ -73,6 +76,9 @@ func setup_visuals(world_height: float) -> void:
 
 	crack3_deep.visible = false
 	crack3_surface.visible = false
+	
+	crack4_deep.visible = false
+	crack4_surface.visible = false
 
 	match crack_stage:
 		0:
@@ -98,6 +104,13 @@ func setup_visuals(world_height: float) -> void:
 
 			crack3_deep.modulate = next_deep
 			crack3_surface.modulate = current_deep
+		4:
+			#print("CRACK 4 START========================")
+			crack4_deep.visible = true
+			crack4_surface.visible = true
+
+			crack4_deep.modulate = next_deep
+			crack4_surface.modulate = current_deep
 
 func _physics_process(delta: float) -> void:
 	var mult := STUCK_SPIN_MULT if stuck_count > 0 else 1.0

@@ -5,8 +5,8 @@ extends Node2D
 var target_overlay_alpha := 0.0
 var freeze_dark_overlay := false
 var score_tween: Tween
-@onready var home_slime: Sprite2D = $World/HomeSlime
-@onready var home_escape: Sprite2D = $World/EscapeText
+@onready var home_slime: Sprite2D = $ParallaxBackground/Slime/HomeSlime
+@onready var home_escape: Sprite2D = $ParallaxBackground/Title/Title
 @onready var lava = $World/Lava
 var current_level: int
 @onready var bgm: AudioStreamPlayer = $BGM
@@ -42,7 +42,6 @@ enum GameState {
 var game_state: GameState = GameState.HOME
 
 func _ready() -> void:
-	SaveData.highscore = 1
 	var safe_area: Rect2 = DisplayServer.get_display_safe_area()
 	var screen_size: Vector2i = DisplayServer.window_get_size()
 	
@@ -111,6 +110,8 @@ func _on_home_start_game() -> void:
 	home_escape.visible = true
 	$World/WorldGenerator.start_generation()
 	game_state = GameState.PLAYING
+	_refresh_score_visibility()
+	
 
 	var tween := create_tween()
 	
@@ -140,6 +141,7 @@ func _process(_delta: float) -> void:
 # SCORE
 # --------------------------
 func _on_player_height_updated(height: float) -> void:
+	score_label.visible = true
 	if height + 1600 <= max_height:
 		return
 	max_height = height + 1600
@@ -147,7 +149,7 @@ func _on_player_height_updated(height: float) -> void:
 	if height < -1380:
 		return
 	if current_level != SaveData.points_to_level(score) :
-		print("POP ANIM, LEVEL :", current_level)
+		#print("POP ANIM, LEVEL :", current_level)
 		_animate_score_punch()
 		current_level = SaveData.points_to_level(score)
 		SaveData.update_difficulty(current_level)
@@ -156,8 +158,6 @@ func _on_player_height_updated(height: float) -> void:
 func _on_player_died() -> void:
 	_vibrate(120)
 	if SaveData.revive_used:
-		score = 0
-		max_height = 0
 		score_update.emit(score)
 		_show_game_over()
 		return
@@ -169,6 +169,7 @@ func _on_revive_player(reward_ad: bool) -> void:
 	#print("STATE → PLAYING (revive)")
 	print("last safe position: ", player.last_safe_position)
 	game_state = GameState.PLAYING
+	_refresh_score_visibility()
 
 	if not reward_ad:
 		var gen = $World/WorldGenerator
@@ -183,7 +184,7 @@ func _on_revive_player(reward_ad: bool) -> void:
 
 	player._on_revive(player.last_safe_position)
 	
-	$World/Lava.reset()
+	$World/Lava.reset(false)
 	$World/Lava.active = true
 
 	_hide_all_ui()
@@ -233,6 +234,7 @@ func _show_home() -> void:
 	#print("STATE → HOME")
 	$World/Lava.active = false
 	game_state = GameState.HOME
+	_refresh_score_visibility()
 	
 	score_label.visible = false
 	_hide_all_ui()
@@ -242,8 +244,10 @@ func _show_home() -> void:
 
 func _show_game_over():
 	#print("STATE → GAME_OVER")
-	score_label.text = ""
 	game_state = GameState.GAME_OVER   # ← CRITICAL LINE
+	score = 0
+	max_height = 0
+	_refresh_score_visibility()
 	AdsManager.on_player_death()
 	player.last_safe_position = SPAWN_POS
 	SaveData.reset_difficulty()
@@ -305,34 +309,11 @@ func _refresh_ui() -> void:
 		get_tree().paused = false
 
 
-	# --------------------------
-	# UPDATE SCORE VISIBILITY
-	# --------------------------
-	_update_score_visibility()
-
-func _update_score_visibility() -> void:
-	var should_show: bool = not home_overlay.visible and not game_over_overlay.visible
-
-	if score_tween:
-		score_tween.kill()
-		score_tween = null
-
-	if should_show:
-		score_label.visible = true
-		score_label.modulate.a = 1.0
-
-	else:
-		score_tween = create_tween()
-		score_tween.tween_property(score_label, "modulate:a", 0.0, 0.2)
-		await score_tween.finished
-
-		if not home_overlay.visible and not game_over_overlay.visible:
-			return
-
-		score_label.visible = false
-		score_tween = null
-		
-		
+func _refresh_score_visibility() -> void:
+	score_label.visible = (
+		game_state == GameState.PLAYING
+	)
+	
 func _close_topmost_ui() -> void:
 
 	if settings_popup.visible:
