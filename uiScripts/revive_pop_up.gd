@@ -57,7 +57,7 @@ func hide_popup() -> void:
 func _on_revive_button_pressed() -> void:
 	radial_timer.running = false
 	_on_rewarded_completed()
-	#AdsManager.show_rewarded_ad()
+	AdsManager.show_rewarded_ad()
 
 
 func _on_rewarded_completed() -> void:

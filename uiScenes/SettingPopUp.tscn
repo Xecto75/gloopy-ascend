@@ -19,15 +19,18 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(540, 850)
+mouse_filter = 2
 script = ExtResource("1_m2ekh")
 
 [node name="BlockerOverlay" type="ColorRect" parent="."]
-z_index = -1
-layout_mode = 0
-offset_left = -510.0
-offset_top = -404.0
-offset_right = 1573.0
-offset_bottom = 2232.0
+top_level = true
+z_index = 999
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 theme = SubResource("Theme_m2ekh")
 color = Color(1, 1, 1, 0)
 
