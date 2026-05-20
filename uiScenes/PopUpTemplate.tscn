@@ -7,17 +7,26 @@
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_toqnl"]
 texture = ExtResource("1_521hr")
 
-[node name="PopUpTemplate" type="Node2D"]
-
-[node name="OutsidePanel" type="Panel" parent="."]
-custom_minimum_size = Vector2(700, 540)
+[node name="PopUpTemplate" type="Control"]
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = 700.0
-offset_bottom = 540.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+
+[node name="OutsidePanel" type="Panel" parent="."]
+custom_minimum_size = Vector2(700, 540)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -350.0
+offset_right = 350.0
+offset_bottom = 540.0
+grow_horizontal = 2
 pivot_offset = Vector2(350, 270)
 theme_override_styles/panel = SubResource("StyleBoxTexture_toqnl")
 metadata/_edit_use_anchors_ = true

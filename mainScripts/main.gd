@@ -7,6 +7,8 @@ var freeze_dark_overlay := false
 var score_tween: Tween
 @onready var home_slime: Sprite2D = $ParallaxBackground/Slime/HomeSlime
 @onready var home_escape: Sprite2D = $ParallaxBackground/Title/Title
+@onready var home_volcano: Sprite2D = $ParallaxBackground/Volcano/Volcano
+
 @onready var lava = $World/Lava
 var current_level: int
 @onready var bgm: AudioStreamPlayer = $BGM
@@ -41,6 +43,12 @@ enum GameState {
 
 var game_state: GameState = GameState.HOME
 
+
+var slime_base_x: float
+var title_base_x: float
+var volcano_base_x: float
+
+	
 func _ready() -> void:
 	var safe_area: Rect2 = DisplayServer.get_display_safe_area()
 	var screen_size: Vector2i = DisplayServer.window_get_size()
@@ -51,6 +59,12 @@ func _ready() -> void:
 	# safe_area.position.y = top notch height
 	pause_button.position.y += max(0.0, top_inset)
 	
+	slime_base_x = home_slime.position.x
+	title_base_x = home_escape.position.x
+	volcano_base_x = home_volcano.position.x
+
+	center_parallax()
+	get_viewport().size_changed.connect(center_parallax)
 	
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
@@ -443,6 +457,18 @@ func _vibrate(ms: int) -> void:
 		return
 
 	Input.vibrate_handheld(ms)
+	
+	
+func center_parallax() -> void:
+	var screen_width = get_viewport_rect().size.x
+	var screen_center = screen_width / 2.0
+	var reference_width = 1080.0 # your design width
+
+	var offset = screen_center - (reference_width / 2.0)
+
+	home_slime.position.x = slime_base_x + offset
+	home_escape.position.x = title_base_x + offset
+	home_volcano.position.x = volcano_base_x + offset
 	
 func _fade_in_overlay() -> void:
 	if gameplay_overlay.visible: 

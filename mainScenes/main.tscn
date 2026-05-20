@@ -164,7 +164,7 @@ color = Color(0, 0, 0, 1)
 [node name="HomeOverlay" parent="UI" node_paths=PackedStringArray("camera") instance=ExtResource("13_1qxlk")]
 offset_top = 6.0
 offset_bottom = 6.0
-pivot_offset = Vector2(534, 903)
+pivot_offset = Vector2(540, 903)
 camera = NodePath("../../World/Player/Sprite2D/Camera2D")
 
 [node name="GameOverOverlay" parent="UI" instance=ExtResource("3_x5oen")]
